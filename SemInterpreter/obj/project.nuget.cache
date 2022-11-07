@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "eJ/BpQ1tS+lcm/4wco+Cfh0CBND35T8A7tCT6VvHPnj9Hcc3blIr0QIVfRvOnyhSKt79ciBVbhJQZHQoyTNKiw==",
+  "success": true,
+  "projectFilePath": "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
+  "expectedPackageFiles": [
+    "/home/ondra/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.10/microsoft.aspnetcore.app.ref.6.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}

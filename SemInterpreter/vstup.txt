@@ -1,0 +1,17 @@
+cislo: int
+neco: double = 5.5
+cislo = 5 + 10
+
+print(cislo," dobre co?")
+
+
+if cislo + 5 == 15:
+print("Ano")
+else:
+print("Ne")
+
+
+if 5 == 15:
+print("Ano")
+else:
+print("Ne nerovna")
