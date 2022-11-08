@@ -19,20 +19,15 @@ public class Parser
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i] == "")
-            {
-                list.Remove(list[i]);
-                i--;
-            }
-        }
-
-        radkySplit = list.ToArray();
+        radkySplit = odeberMezery(list, radkySplit,0);
+        
+        Console.WriteLine(radkySplit.Length + " pocet radku");
 
         for (int j = 0; j < radkySplit.Length; j++)
         {
             string[] slova = radkySplit[j].Split(' ');
+            slova = odeberMezery(list, slova,0);
+            
             string slovoHlavni = slova[0];
 
             //jestli to je print
@@ -80,55 +75,70 @@ public class Parser
                             pr2.datovejTyp = "int";
                         }
                     }
+
+                    rovnoPr1 = odeberMezery(list, rovnoPr1,0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2,0);
                     
-                    list = rovnoPr1.ToList();
-
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        if (list[i] == "")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                        }
-                    }
-
-                    rovnoPr1 = list.ToArray();
                     
-                    list = rovnoPr2.ToList();
-
-                    for (int i = 0; i < list.Count; i++)
+                    if (znamPromennou(rovnoPr1[0]))
                     {
-                        if (list[i] == "")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                        }
+                        pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
                     }
-
-                    rovnoPr2 = list.ToArray();
+                    if (znamPromennou(rovnoPr2[0]))
+                    {
+                        pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
+                    }
                     
                     zjistiCoTamje(rovnoPr1,pr1, 0);
                     zjistiCoTamje(rovnoPr2,pr2, 0);
 
                     if (pr1.hodnota == pr2.hodnota)
                     {
+                        string vstupIf = "";
                         j++;
-                        while (!radkySplit[j].Contains("else"))
+
+                        try
                         {
+                            while (!radkySplit[j].Contains("else"))
+                            {
                             
-                            ctiSlovo(radkySplit[j]);
-                            j++;
+                                vstupIf += radkySplit[j] + "\n";
+                                j++;
                             
+                            }
                         }
+                        catch (IndexOutOfRangeException e)
+                        {
+                           
+                        }
+                        
+                        ctiSlovo(vstupIf);
+                        
                     }
                     else
                     {
+                        string vstupIf = "";
                         j++;
+                        try
+                        {
                         while (!radkySplit[j].Contains("else"))
                         {
+                            vstupIf += radkySplit[j] + "\n";
                             j++;
                             
                         }
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+                           
+                        }
+                        
+                        string[] test = vstupIf.Split('\n');
+                        int pocetRadkuElse = 0;
+
+                        test = odeberMezery(list, test, pocetRadkuElse);
+        
+                        Console.WriteLine(test.Length + " pocet radku else");
                     }
                     
                     
@@ -562,5 +572,31 @@ public class Parser
         }
 
         return null;
+    }
+
+    private string[] odeberMezery(List<String> list, string[] zCehoToBeru, int pocetRadku)
+    {
+        // mozna pocitani mezer u radku
+        int pocetMezer = 0;
+        list = zCehoToBeru.ToList();
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] == "")
+            {
+                pocetMezer++;
+                list.Remove(list[i]);
+                i--;
+            }
+        }
+
+        zCehoToBeru = list.ToArray();
+
+        if (pocetMezer == 4)
+        {
+            pocetRadku++;
+        }
+        
+        return zCehoToBeru;
     }
 }
