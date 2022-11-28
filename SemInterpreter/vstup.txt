@@ -1,8 +1,13 @@
 cislo: int
 cislo = 10
 
-
 if cislo == 10:
     print("ano")
+    if cislo == 11:
+            print("anoo")
+        else:
+            print("nee")
 else:
     print("ne")
+
+print("Dalsi text")

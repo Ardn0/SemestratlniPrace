@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "eJ/BpQ1tS+lcm/4wco+Cfh0CBND35T8A7tCT6VvHPnj9Hcc3blIr0QIVfRvOnyhSKt79ciBVbhJQZHQoyTNKiw==",
+  "dgSpecHash": "z2QY0+74YZHg4gCf38oL0C2id06h9aGZEFAodIaf0U/ZXa4QdlYvVD+fjxgRyM8M+6DHUQbg3wBoVM89yxUGKw==",
   "success": true,
   "projectFilePath": "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
   "expectedPackageFiles": [
-    "/home/ondra/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.10/microsoft.aspnetcore.app.ref.6.0.10.nupkg.sha512"
+    "/home/ondra/.nuget/packages/microsoft.netcore.app.ref/6.0.11/microsoft.netcore.app.ref.6.0.11.nupkg.sha512",
+    "/home/ondra/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.11/microsoft.aspnetcore.app.ref.6.0.11.nupkg.sha512",
+    "/home/ondra/.nuget/packages/microsoft.netcore.app.host.linux-x64/6.0.11/microsoft.netcore.app.host.linux-x64.6.0.11.nupkg.sha512"
   ],
   "logs": []
 }

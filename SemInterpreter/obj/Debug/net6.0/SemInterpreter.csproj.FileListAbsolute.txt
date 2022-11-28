@@ -17,7 +17,6 @@
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/bin/Debug/net6.0/SemInterpreter.deps.json
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/bin/Debug/net6.0/SemInterpreter.runtimeconfig.json
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/bin/Debug/net6.0/SemInterpreter.dll
-/home/ondra/Downloads/SemInterpreter/SemInterpreter/bin/Debug/net6.0/ref/SemInterpreter.dll
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/bin/Debug/net6.0/SemInterpreter.pdb
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/SemInterpreter.csproj.AssemblyReference.cache
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/SemInterpreter.GeneratedMSBuildEditorConfig.editorconfig
@@ -28,3 +27,4 @@
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/ref/SemInterpreter.dll
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/SemInterpreter.pdb
 /home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/SemInterpreter.genruntimeconfig.cache
+/home/ondra/Downloads/SemInterpreter/SemInterpreter/obj/Debug/net6.0/refint/SemInterpreter.dll

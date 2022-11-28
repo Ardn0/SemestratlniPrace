@@ -14,14 +14,14 @@ public class Parser
         promenne = new List<Promenna>();
     }
 
-    public void ctiSlovo(string vstup)
+    public void ctiSlovo(string vstup) //jmeno
     {
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
         radkySplit = odeberMezery(list, radkySplit,0);
         
-        Console.WriteLine(radkySplit.Length + " pocet radku");
+        //Console.WriteLine(radkySplit.Length + " pocet radku");
 
         for (int j = 0; j < radkySplit.Length; j++)
         {
@@ -99,7 +99,7 @@ public class Parser
 
                         try
                         {
-                            while (!radkySplit[j].Contains("else"))
+                            while (!radkySplit[j].Contains("else") || !radkySplit[j].Contains("if"))
                             {
                             
                                 vstupIf += radkySplit[j] + "\n";
@@ -113,7 +113,17 @@ public class Parser
                         }
                         
                         ctiSlovo(vstupIf);
-                        
+                        j++;
+
+                        vstupIf = radkySplit[j];
+                        while (vstupIf[0] == ' ')
+                        {
+                            j++;
+                            vstupIf = radkySplit[j];
+                        }
+
+                        j--;
+
                     }
                     else
                     {
@@ -137,8 +147,6 @@ public class Parser
                         int pocetRadkuElse = 0;
 
                         test = odeberMezery(list, test, pocetRadkuElse);
-        
-                        Console.WriteLine(test.Length + " pocet radku else");
                     }
                     
                     
@@ -582,7 +590,7 @@ public class Parser
 
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i] == "")
+            if (list[i] == "" || list[i] == " ")
             {
                 pocetMezer++;
                 list.Remove(list[i]);
