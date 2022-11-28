@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj": {}
+    "/home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj": {}
   },
   "projects": {
-    "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj": {
+    "/home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
+        "projectUniqueName": "/home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
         "projectName": "SemInterpreter",
-        "projectPath": "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
+        "projectPath": "/home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/SemInterpreter.csproj",
         "packagesPath": "/home/ondra/.nuget/packages/",
-        "outputPath": "/home/ondra/Documents/SemestratlniPrace/SemInterpreter/obj/",
+        "outputPath": "/home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/ondra/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {}
           }
         },
@@ -35,8 +35,8 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "imports": [
             "net461",
             "net462",
@@ -51,15 +51,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.11, 6.0.11]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[6.0.11, 6.0.11]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.11, 6.0.11]"
+              "version": "[7.0.0, 7.0.0]"
             }
           ],
           "frameworkReferences": {
