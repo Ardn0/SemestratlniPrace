@@ -1,13 +1,25 @@
-cislo: int
-cislo = 10
+i: int = 5
 
-if cislo == 10:
-    print("ano")
-    if cislo == 11:
-            print("anoo")
+while i == 5:
+    print("cus")
+    i = i + 1
+
+i = 3
+print("i je ",i)
+
+if i == 3:
+    print("Ano")
+    print("Nevim")
+    if i + 1 == 5:
+        i = 10
+    else:
+        if i + 2 == 5:
+            i = 30
         else:
-            print("nee")
+            i = 40
 else:
-    print("ne")
+    print("Ne")
+    print("Nevim")
+    i = 20
 
-print("Dalsi text")
+print("Netusim konec ",i)

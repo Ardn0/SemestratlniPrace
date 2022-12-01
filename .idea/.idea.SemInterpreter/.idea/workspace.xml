@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Parser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/vstup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/vstup.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/6f/1fd7b4d3/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2IBHDfUb4e0sNYsT437Z6alq4Nd" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RunManager">
     <configuration name="SemInterpreter" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -19,5 +55,79 @@
         <option name="Build" />
       </method>
     </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="" />
+      <created>1669647937080</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1669647937080</updated>
+      <workItem from="1669647939781" duration="13203000" />
+      <workItem from="1669729865169" duration="2757000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SemInterpreter/Parser.cs</url>
+          <line>492</line>
+          <properties documentPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" initialLine="490" containingFunctionPresentation="method 'ctiSlovo'">
+            <startOffsets>
+              <option value="17290" />
+            </startOffsets>
+            <endOffsets>
+              <option value="17291" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SemInterpreter/Parser.cs</url>
+          <line>431</line>
+          <properties documentPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" initialLine="431" containingFunctionPresentation="method 'ctiSlovo'">
+            <startOffsets>
+              <option value="14766" />
+            </startOffsets>
+            <endOffsets>
+              <option value="14825" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SemInterpreter/Parser.cs</url>
+          <line>771</line>
+          <properties documentPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" initialLine="771" containingFunctionPresentation="method 'zjistiCoTamje'">
+            <startOffsets>
+              <option value="27489" />
+            </startOffsets>
+            <endOffsets>
+              <option value="27506" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

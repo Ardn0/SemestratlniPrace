@@ -19,35 +19,366 @@ public class Parser
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
-        radkySplit = odeberMezery(list, radkySplit,0);
-        
+        radkySplit = odeberMezery(list, radkySplit, 0);
+
         //Console.WriteLine(radkySplit.Length + " pocet radku");
 
         for (int j = 0; j < radkySplit.Length; j++)
         {
             string[] slova = radkySplit[j].Split(' ');
-            slova = odeberMezery(list, slova,0);
-            
+            slova = odeberMezery(list, slova, 0);
+
             string slovoHlavni = slova[0];
 
             //jestli to je print
             if (slovoHlavni.Contains("print"))
             {
                 pr = new Promenna();
-                funkcePrint(radkySplit[j],pr);
+                funkcePrint(radkySplit[j], pr);
                 Console.WriteLine(pr.hodnota);
             }
+            else if (slovoHlavni.Contains("while"))
+            {
+                string[] whileSplit1 = radkySplit[j].Split(':');
+                string[] whileSplit2 = whileSplit1[0].Split("while");
+
+                if (whileSplit2[1].Contains("<"))
+                {
+                    Promenna pr1 = new Promenna();
+                    Promenna pr2 = new Promenna();
+
+                    string[] rovnoRovno = whileSplit2[1].Split("<");
+                    string[] rovnoPr1 = rovnoRovno[0].Split(" ");
+                    string[] rovnoPr2 = rovnoRovno[1].Split(" ");
+
+                    if (rovnoRovno[0].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[0].Contains("."))
+                        {
+                            pr1.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr1.datovejTyp = "int";
+                        }
+                    }
+
+                    if (rovnoRovno[1].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[1].Contains("."))
+                        {
+                            pr2.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr2.datovejTyp = "int";
+                        }
+                    }
+
+                    rovnoPr1 = odeberMezery(list, rovnoPr1, 0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2, 0);
+
+
+                    if (znamPromennou(rovnoPr1[0]))
+                    {
+                        pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
+                    }
+
+                    if (znamPromennou(rovnoPr2[0]))
+                    {
+                        pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
+                    }
+
+                    zjistiCoTamje(rovnoPr1, pr1, 0);
+                    zjistiCoTamje(rovnoPr2, pr2, 0);
+
+                    List<string> listWhile = new List<string>();
+                    int pozice = j + 1;
+                    try
+                    {
+                        while (radkySplit[pozice].Contains("   "))
+                        {
+                            listWhile.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        
+                    }
+
+                    j = pozice-1;
+                    int test = 0;
+
+                    while (double.Parse(pr1.hodnota) < double.Parse(pr2.hodnota))
+                    {
+                        while ( test < listWhile.Count)
+                        {
+                            ctiSlovo(listWhile[test]);
+                            test++;
+                        }
+
+                        test = 0;
+                        zjistiCoTamje(rovnoPr1, pr1, 0);
+                        zjistiCoTamje(rovnoPr2, pr2, 0);
+                    }
+                }else if (whileSplit2[1].Contains(">"))
+                {
+                    Promenna pr1 = new Promenna();
+                    Promenna pr2 = new Promenna();
+
+                    string[] rovnoRovno = whileSplit2[1].Split(">");
+                    string[] rovnoPr1 = rovnoRovno[0].Split(" ");
+                    string[] rovnoPr2 = rovnoRovno[1].Split(" ");
+
+                    if (rovnoRovno[0].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[0].Contains("."))
+                        {
+                            pr1.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr1.datovejTyp = "int";
+                        }
+                    }
+
+                    if (rovnoRovno[1].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[1].Contains("."))
+                        {
+                            pr2.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr2.datovejTyp = "int";
+                        }
+                    }
+
+                    rovnoPr1 = odeberMezery(list, rovnoPr1, 0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2, 0);
+
+
+                    if (znamPromennou(rovnoPr1[0]))
+                    {
+                        pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
+                    }
+
+                    if (znamPromennou(rovnoPr2[0]))
+                    {
+                        pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
+                    }
+
+                    zjistiCoTamje(rovnoPr1, pr1, 0);
+                    zjistiCoTamje(rovnoPr2, pr2, 0);
+
+                    List<string> listWhile = new List<string>();
+                    int pozice = j + 1;
+                    try
+                    {
+                        while (radkySplit[pozice].Contains("   "))
+                        {
+                            listWhile.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                       
+                    }
+
+                    j = pozice-1;
+                    int test = 0;
+
+                    while (double.Parse(pr1.hodnota) > double.Parse(pr2.hodnota))
+                    {
+                        while (test < listWhile.Count)
+                        {
+                            ctiSlovo(listWhile[test]);
+                            test++;
+                        }
+
+                        test = 0;
+                        zjistiCoTamje(rovnoPr1, pr1, 0);
+                        zjistiCoTamje(rovnoPr2, pr2, 0);
+                    }
+                }
+
+                if (whileSplit2[1].Contains("=="))
+                {
+                    Promenna pr1 = new Promenna();
+                    Promenna pr2 = new Promenna();
+
+                    string[] rovnoRovno = whileSplit2[1].Split("==");
+                    string[] rovnoPr1 = rovnoRovno[0].Split(" ");
+                    string[] rovnoPr2 = rovnoRovno[1].Split(" ");
+
+                    if (rovnoRovno[0].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[0].Contains("."))
+                        {
+                            pr1.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr1.datovejTyp = "int";
+                        }
+                    }
+
+                    if (rovnoRovno[1].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[1].Contains("."))
+                        {
+                            pr2.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr2.datovejTyp = "int";
+                        }
+                    }
+
+                    rovnoPr1 = odeberMezery(list, rovnoPr1, 0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2, 0);
+
+
+                    if (znamPromennou(rovnoPr1[0]))
+                    {
+                        pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
+                    }
+
+                    if (znamPromennou(rovnoPr2[0]))
+                    {
+                        pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
+                    }
+
+                    zjistiCoTamje(rovnoPr1, pr1, 0);
+                    zjistiCoTamje(rovnoPr2, pr2, 0);
+
+                    List<string> listWhile = new List<string>();
+                    int pozice = j + 1;
+                    try
+                    {
+                        while (radkySplit[pozice].Contains("   "))
+                        {
+                            listWhile.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        
+                    }
+
+                    j = pozice -1;
+                    int test = 0;
+
+                    while (double.Parse(pr1.hodnota) == double.Parse(pr2.hodnota))
+                    {
+                        while (test < listWhile.Count)
+                        {
+                            ctiSlovo(listWhile[test]);
+                            test++;
+                        }
+
+                        test = 0;
+                        zjistiCoTamje(rovnoPr1, pr1, 0);
+                        zjistiCoTamje(rovnoPr2, pr2, 0);
+                    }
+                }
+
+                if (whileSplit2[1].Contains("!="))
+                {
+                    Promenna pr1 = new Promenna();
+                    Promenna pr2 = new Promenna();
+
+                    string[] rovnoRovno = whileSplit2[1].Split("!=");
+                    string[] rovnoPr1 = rovnoRovno[0].Split(" ");
+                    string[] rovnoPr2 = rovnoRovno[1].Split(" ");
+
+                    if (rovnoRovno[0].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[0].Contains("."))
+                        {
+                            pr1.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr1.datovejTyp = "int";
+                        }
+                    }
+
+                    if (rovnoRovno[1].Any(char.IsNumber))
+                    {
+                        if (rovnoRovno[1].Contains("."))
+                        {
+                            pr2.datovejTyp = "double";
+                        }
+                        else
+                        {
+                            pr2.datovejTyp = "int";
+                        }
+                    }
+
+                    rovnoPr1 = odeberMezery(list, rovnoPr1, 0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2, 0);
+
+
+                    if (znamPromennou(rovnoPr1[0]))
+                    {
+                        pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
+                    }
+
+                    if (znamPromennou(rovnoPr2[0]))
+                    {
+                        pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
+                    }
+
+                    zjistiCoTamje(rovnoPr1, pr1, 0);
+                    zjistiCoTamje(rovnoPr2, pr2, 0);
+
+                    List<string> listWhile = new List<string>();
+                    int pozice = j + 1;
+                    try
+                    {
+                        while (radkySplit[pozice].Contains("   "))
+                        {
+                            listWhile.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        
+                    }
+
+                    j = pozice-1;
+                    int test = 0;
+
+                    while (double.Parse(pr1.hodnota) != double.Parse(pr2.hodnota))
+                    {
+                        while (test < listWhile.Count)
+                        {
+                            ctiSlovo(listWhile[test]);
+                            test++;
+                        }
+
+                        test = 0;
+                        zjistiCoTamje(rovnoPr1, pr1, 0);
+                        zjistiCoTamje(rovnoPr2, pr2, 0);
+                    }
+                }
+            }
             // jestli to je if
-            else if (slovoHlavni.Contains("if") || slovoHlavni.Contains("elif"))
+            else if (slovoHlavni.Contains("if"))
             {
                 string[] ifSplit1 = radkySplit[j].Split(':');
                 string[] ifSplit2 = ifSplit1[0].Split("if");
-                
+
                 if (ifSplit2[1].Contains("=="))
                 {
                     Promenna pr1 = new Promenna();
                     Promenna pr2 = new Promenna();
-                    
+
                     string[] rovnoRovno = ifSplit2[1].Split("==");
                     string[] rovnoPr1 = rovnoRovno[0].Split(" ");
                     string[] rovnoPr2 = rovnoRovno[1].Split(" ");
@@ -63,7 +394,7 @@ public class Parser
                             pr1.datovejTyp = "int";
                         }
                     }
-                    
+
                     if (rovnoRovno[1].Any(char.IsNumber))
                     {
                         if (rovnoRovno[1].Contains("."))
@@ -76,90 +407,142 @@ public class Parser
                         }
                     }
 
-                    rovnoPr1 = odeberMezery(list, rovnoPr1,0);
-                    rovnoPr2 = odeberMezery(list, rovnoPr2,0);
-                    
-                    
+                    rovnoPr1 = odeberMezery(list, rovnoPr1, 0);
+                    rovnoPr2 = odeberMezery(list, rovnoPr2, 0);
+
+
                     if (znamPromennou(rovnoPr1[0]))
                     {
                         pr1.datovejTyp = dejPromennou(rovnoPr1[0]).datovejTyp;
                     }
+
                     if (znamPromennou(rovnoPr2[0]))
                     {
                         pr2.datovejTyp = dejPromennou(rovnoPr2[0]).datovejTyp;
                     }
-                    
-                    zjistiCoTamje(rovnoPr1,pr1, 0);
-                    zjistiCoTamje(rovnoPr2,pr2, 0);
 
-                    if (pr1.hodnota == pr2.hodnota)
+                    zjistiCoTamje(rovnoPr1, pr1, 0);
+                    zjistiCoTamje(rovnoPr2, pr2, 0);
+
+                    List<string> listIf = new List<string>();
+                    int pozice = j + 1;
+                    string dejNoveSlovo = "";
+                    int test = 0;
+
+                    if (double.Parse(pr1.hodnota) == double.Parse(pr2.hodnota))
                     {
-                        string vstupIf = "";
-                        j++;
-
                         try
                         {
-                            while (!radkySplit[j].Contains("else") || !radkySplit[j].Contains("if"))
+                            while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
                             {
-                            
-                                vstupIf += radkySplit[j] + "\n";
-                                j++;
+                                if (!radkySplit[pozice].Contains("if"))
+                                {
+                                    listIf.Add(radkySplit[pozice]);
+                                    pozice++;
+                                }
+                                else
+                                {
+                                    dejNoveSlovo += radkySplit[pozice] + "\n";
+                                    pozice++;
+                                    while (radkySplit[pozice].Contains("      ") || radkySplit[pozice].Contains("   else"))
+                                    {
+                                        dejNoveSlovo += radkySplit[pozice] + "\n";
+                                        pozice++;
+                                    }
+                                
+                                    ctiSlovo(dejNoveSlovo);
+                                }
                             
                             }
                         }
                         catch (IndexOutOfRangeException e)
                         {
-                           
+                        
+                        }
+
+                        j = pozice-1; 
+                        test = 0;
+                        
+                        while (test < listIf.Count)
+                        {
+                            ctiSlovo(listIf[test]);
+                            test++;
                         }
                         
-                        ctiSlovo(vstupIf);
-                        j++;
-
-                        vstupIf = radkySplit[j];
-                        while (vstupIf[0] == ' ')
+                        if (radkySplit[pozice].Contains("else"))
                         {
-                            j++;
-                            vstupIf = radkySplit[j];
+                            pozice++;
+                            try
+                            {
+                                while (radkySplit[pozice].Contains("   "))
+                                {
+                                    listIf.Add(radkySplit[pozice]);
+                                    pozice++;
+                                }
+                            }
+                            catch (IndexOutOfRangeException e)
+                            {
+                        
+                            }
+
+                            j = pozice-1;
+                            test = 0;
                         }
-
-                        j--;
-
                     }
                     else
                     {
-                        string vstupIf = "";
-                        j++;
-                        try
+                        while (!radkySplit[pozice].Contains("else"))
                         {
-                        while (!radkySplit[j].Contains("else"))
+                            pozice++;
+                        }
+
+                        if (radkySplit[pozice].Contains("else"))
                         {
-                            vstupIf += radkySplit[j] + "\n";
-                            j++;
+                            listIf.Clear();
+                            pozice++;
+                            try
+                            {
+                                while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
+                                {
+                                    if (!radkySplit[pozice].Contains("if"))
+                                    {
+                                        listIf.Add(radkySplit[pozice]);
+                                        pozice++;
+                                    }
+                                    else
+                                    {
+                                        dejNoveSlovo += radkySplit[pozice] + "\n";
+                                        pozice++;
+                                        while (radkySplit[pozice].Contains("      ") || radkySplit[pozice].Contains("   else"))
+                                        {
+                                            dejNoveSlovo += radkySplit[pozice] + "\n";
+                                            pozice++;
+                                        }
+                                
+                                        ctiSlovo(dejNoveSlovo);
+                                    }
                             
-                        }
-                        }
-                        catch (IndexOutOfRangeException e)
-                        {
-                           
-                        }
+                                }
+                            }
+                            catch (IndexOutOfRangeException e)
+                            {
                         
-                        string[] test = vstupIf.Split('\n');
-                        int pocetRadkuElse = 0;
+                            }
 
-                        test = odeberMezery(list, test, pocetRadkuElse);
+                            while (test < listIf.Count)
+                            {
+                                ctiSlovo(listIf[test]);
+                                test++;
+                            }
+                        }
                     }
-                    
-                    
-
-                }else if(ifSplit2[1].Contains(">"))
-                {
-                    
-                }else if (ifSplit2[1].Contains("<"))
-                {
-                    
                 }
-                
-                
+                else if (ifSplit2[1].Contains(">"))
+                {
+                }
+                else if (ifSplit2[1].Contains("<"))
+                {
+                }
             }
             //jestli to je promenna s type
             else if (slovoHlavni[slovoHlavni.Length - 1] == ':')
@@ -294,12 +677,12 @@ public class Parser
                             string noveSlovo = pocs.nactiVyraz(pocitaniVstup);
                             promenna.hodnota = noveSlovo;
                         }
-                    }else
+                    }
+                    else
                     {
                         Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
                         Environment.Exit((int)ExitCode.InvalidDataType);
                     }
-                    
                 }
                 else
                 {
@@ -337,7 +720,8 @@ public class Parser
                             string noveSlovo = pocs.nactiVyraz(pocitaniVstup);
                             promenna.hodnota = noveSlovo;
                         }
-                    }else
+                    }
+                    else
                     {
                         Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
                         Environment.Exit((int)ExitCode.InvalidDataType);
@@ -392,14 +776,15 @@ public class Parser
                     Promenna prNova = dejPromennou(slovo);
                     if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "string")
                     {
-                        pocitaniVstup += '"'+prNova.hodnota+'"';
-                        
+                        pocitaniVstup += '"' + prNova.hodnota + '"';
+
                         if (i == slova.Length || i == slova.Length - 1)
                         {
                             string noveSlovo = pocs.nactiVyraz(pocitaniVstup);
                             promenna.hodnota = noveSlovo;
                         }
-                    }else if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "int")
+                    }
+                    else if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "int")
                     {
                         if (pocitaniVstup == "")
                         {
@@ -409,8 +794,8 @@ public class Parser
                         {
                             pocitaniVstup += int.Parse(prNova.hodnota);
                         }
-                       
-                        
+
+
                         if (i == slova.Length || i == slova.Length - 1)
                         {
                             pocc.vstup = pocitaniVstup;
@@ -421,7 +806,7 @@ public class Parser
                     else if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "double")
                     {
                         pocitaniVstup += double.Parse(prNova.hodnota);
-                        
+
                         if (i == slova.Length || i == slova.Length - 1)
                         {
                             pocc.vstup = pocitaniVstup;
@@ -443,11 +828,11 @@ public class Parser
             }
         }
     }
-    
+
     private void funkcePrint(string slovoPrint, Promenna promenna)
     {
         string[] uvozovka1 = slovoPrint.Split("(");
-        string[] uvozovka2 = uvozovka1[uvozovka1.Length-1].Split(")");
+        string[] uvozovka2 = uvozovka1[uvozovka1.Length - 1].Split(")");
         string[] slova = uvozovka2[0].Split(',');
         string pocitaniVstup = "";
         pocc = new PocitaniCisla();
@@ -539,8 +924,8 @@ public class Parser
                 if (znamPromennou(slovo))
                 {
                     Promenna prNova = dejPromennou(slovo);
-                    pocitaniVstup += '"'+prNova.hodnota+'"';
-                        
+                    pocitaniVstup += '"' + prNova.hodnota + '"';
+
                     if (i == slova.Length || i == slova.Length - 1)
                     {
                         string noveSlovo = pocs.nactiVyraz(pocitaniVstup);
@@ -568,7 +953,7 @@ public class Parser
 
         return false;
     }
-    
+
     private Promenna dejPromennou(string slovo)
     {
         foreach (var VARIABLE in promenne)
@@ -604,7 +989,7 @@ public class Parser
         {
             pocetRadku++;
         }
-        
+
         return zCehoToBeru;
     }
 }
