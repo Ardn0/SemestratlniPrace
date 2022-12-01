@@ -10,16 +10,35 @@ print("i je ",i)
 if i == 3:
     print("Ano")
     print("Nevim")
+    TODO cislo: int = 6 nelze aby bylo videt venku z if
     if i + 1 == 5:
         i = 10
     else:
-        if i + 2 == 5:
-            i = 30
-        else:
-            i = 40
+        i = 40
 else:
     print("Ne")
     print("Nevim")
-    i = 20
+    if i + 1 == 6:
+        i = 20
+    else:
+        i = 50
 
 print("Netusim konec ",i)
+
+i = 2
+
+def mojeFunkce():
+    TODO parametry a navratovej typ
+    print("cus tohle je fce a i je ",i)
+    while i < 5:
+        i = i + 1
+        mojeFunkce()
+
+mojeFunkce()
+
+print("")
+
+def mojeFce(cislo: int):
+    print(cislo)
+
+mojeFce(5)
