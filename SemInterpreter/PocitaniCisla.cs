@@ -12,6 +12,7 @@ namespace SemInterpreter
         public bool NactiVyraz()
         {
             string? znamenkoOperator;
+
             splitPomocna = vstup.Split(" ");
 
             while (true)

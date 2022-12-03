@@ -10,6 +10,8 @@ print("i je ",i)
 if i == 3:
     print("Ano")
     print("Nevim")
+    pokus: int = 69
+    print(pokus)
     TODO cislo: int = 6 nelze aby bylo videt venku z if
     if i + 1 == 5:
         i = 10
@@ -17,18 +19,17 @@ if i == 3:
         i = 40
 else:
     print("Ne")
-    print("Nevim")
+    print("Nevim ",pokus)
     if i + 1 == 6:
         i = 20
     else:
         i = 50
 
-print("Netusim konec ",i)
+print("Netusim konec ",i," aaa ")
 
 i = 2
 
 def mojeFunkce():
-    TODO parametry a navratovej typ
     print("cus tohle je fce a i je ",i)
     while i < 5:
         i = i + 1
@@ -38,7 +39,39 @@ mojeFunkce()
 
 print("")
 
-def mojeFce(cislo: int):
-    print(cislo)
+def mojeFce(cislo: int,text: string,cislo2: double):
+    print(cislo," to je paramert ",text)
 
-mojeFce(5)
+mojeFce(5,"textasda",2.2)
+
+print("")
+
+def mojeFceReturn(cislo: int) -> int:
+    cislo = cislo - 5
+    return cislo
+
+i = mojeFceReturn(100)
+
+print("test ",i)
+
+i = mojeFceReturn(200)
+
+print("test ",i)
+
+i = 10
+
+if i == 10:
+    cislo: int = 50
+    print("cislo i ",i," cisloIF ",cislo)
+    if i + 1 == 11:
+        cisloa: int = 60
+        print("cislo i ",i," cislo2 ",cisloa)
+    else:
+        cisloa: int = 60
+        print("cislo i ",i," cislo2 ",cisloa)
+else:
+    cislo: int = 50
+    print("cislo i ",i," cisloElse ",cislo)
+
+
+print("cislo i ",i," cislo3 ")

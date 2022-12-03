@@ -5,7 +5,7 @@ public class Interpreter
     public Interpreter(string vstup)
     {
         Parser par = new Parser();
-        par.ctiSlovo(vstup);
+        par.ctiSlovo(vstup,new List<Promenna>());
         
     }
 }

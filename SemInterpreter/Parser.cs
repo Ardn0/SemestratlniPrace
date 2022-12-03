@@ -4,20 +4,31 @@ namespace SemInterpreter;
 
 public class Parser
 {
-    public static List<Promenna> promenne;
+    public static List<Promenna> promenneGlobal;
+    public static List<Promenna> promenneLocal;
     public static List<Funkce> funkce;
     private Promenna pr;
     private PocitaniCisla pocc;
     private PocitaniString pocs;
+    private bool jsemVIf = false;
 
     public Parser()
     {
-        promenne = new List<Promenna>();
+        promenneGlobal = new List<Promenna>();
+        promenneLocal = new List<Promenna>();
         funkce = new List<Funkce>();
     }
 
-    public void ctiSlovo(string vstup) //jmeno
+    public void ctiSlovo(string vstup, List<Promenna> listy) //jmeno
     {
+        if (listy.Count != 0)
+        {
+            foreach (var VARIABLE in listy)
+            {
+                promenneLocal.Add(VARIABLE);
+            }
+        }
+
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
@@ -39,56 +50,138 @@ public class Parser
                 funkcePrint(radkySplit[j], pr);
                 Console.WriteLine(pr.hodnota);
             }
-            else if (slovoHlavni.Contains("()")) // jestli to je volani fce
+            else if (slovoHlavni.Contains("return"))
             {
-                if (znamFunkci(slovoHlavni))
+                break;
+            }
+            else if (slovoHlavni.Contains("double"))
+            {
+                string[] test = slovoHlavni.Split('(');
+                string[] test1 = test[1].Split(')');
+                
+                if(znamPromennou(test1[0]))
                 {
-                    Funkce def = dejFunkci(slovoHlavni);
-                    string vstupDef = "";
+                    Promenna pr = dejPromennou(test1[0]);
+                    pr.datovejTyp = "double";
+                    pr.hodnota += ".0";
+                }
+            }
+            else if (slovoHlavni.Contains("int"))
+            {
+                string[] test = slovoHlavni.Split('(');
+                string[] test1 = test[1].Split(')');
+                
+                if(znamPromennou(test1[0]))
+                {
+                    Promenna pr = dejPromennou(test1[0]);
+                    pr.datovejTyp = "int";
+                    int convert = (int)double.Parse(pr.hodnota);
+                    pr.hodnota = convert.ToString();
+                }
+            }
+            else if (slovoHlavni.Contains('(') && slovoHlavni.Contains(')')) // jestli to je volani fce
+            {
+                string[] test = slovoHlavni.Split('(');
+                string[] test1 = test[1].Split(')');
+                string[] test2 = test1[0].Split(',');
 
-                    for (int i = 0; i < def.teloFce.Count; i++)
+                if (znamFunkci(test[0]))
+                {
+                    Funkce def = dejFunkci(test[0]);
+
+                    if ((def.parametry.Count != 0 && test1[0] != "") ||
+                        (def.parametry.Count == 0 && test1[0] == ""))
                     {
-                        vstupDef += def.teloFce[i] + "\n";
+                        string vstupDef = "";
+
+                        for (int i = 0; i < def.teloFce.Count; i++)
+                        {
+                            vstupDef += def.teloFce[i] + "\n";
+                        }
+
+                        if (def.parametry.Count != 0 && test1[0] != "")
+                        {
+                            for (int i = 0; i < def.parametry.Count; i++)
+                            {
+                                try
+                                {
+                                    def.promenneDef[i].hodnota = test2[i];
+                                }
+                                catch (IndexOutOfRangeException e)
+                                {
+                                    Console.WriteLine("Chybi parametr u funkce: " + def.nazev);
+                                    Environment.Exit((int)ExitCode.ParameterMissing);
+                                }
+                            }
+                        }
+
+                        ctiSlovo(vstupDef, def.promenneDef);
+                        promenneLocal.Clear();
                     }
-                    
-                    ctiSlovo(vstupDef);
                 }
             }
             else if (slovoHlavni.Contains("def")) // jestli to je vytvoreni fce
             {
-                int pocet = j+1;
+                int pocet = j + 1;
                 Funkce def = new Funkce();
-                string[] nazevFce = slova[1].Split("()");
-
-                if (slova.Length > 2)
-                {
-                    string spoj = "";
-                    for (int i = 1; i < slova.Length; i++)
-                    {
-                        spoj += slova[i];
-                    }
-
-                    string[] test = spoj.Split("(");
-                    string[] test2 = test[1].Split(")");
-                }
-
+                string[] nazevFce = slova[1].Split('(');
                 def.nazev = nazevFce[0];
-                try
+
+                if (znamFunkci(def.nazev))
                 {
-                    while (radkySplit[pocet].Contains("   "))
+                    Console.WriteLine("Funkce uz existuje: " + def.nazev);
+                    Environment.Exit((int)ExitCode.DefExist);
+                }
+                else
+                {
+
+                    if (slova.Length > 2)
                     {
-                        def.teloFce.Add(radkySplit[pocet]);
-                        pocet++;
+                        string spoj = "";
+                        for (int i = 1; i < slova.Length; i++)
+                        {
+                            spoj += slova[i];
+                        }
+
+                        string[] test = spoj.Split("(");
+                        string[] test2 = test[1].Split(")");
+                        string[] test3 = test2[0].Split(',');
+
+                        if (test2[test2.Length - 1].Contains("->"))
+                        {
+                            string[] test4 = test2[test2.Length - 1].Split("->");
+                            string[] test5 = test4[1].Split(':');
+                            def.navratovejTyp = test5[0];
+                        }
+
+                        foreach (var VARIABLE in test3)
+                        {
+                            def.parametry.Add(VARIABLE);
+                            string[] test4 = VARIABLE.Split(':');
+                            Promenna pr = new Promenna();
+                            pr.nazev = test4[0];
+                            pr.datovejTyp = test4[1];
+                            def.promenneDef.Add(pr);
+                        }
                     }
-                }
-                catch (IndexOutOfRangeException e)
-                {
 
-                }
-               
+                    
+                    try
+                    {
+                        while (radkySplit[pocet].Contains("   "))
+                        {
+                            def.teloFce.Add(radkySplit[pocet]);
+                            pocet++;
+                        }
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                    }
 
-                j = pocet - 1;
-                funkce.Add(def);
+
+                    j = pocet - 1;
+                    funkce.Add(def);
+                }
             }
             else if (slovoHlavni.Contains("while"))
             {
@@ -157,17 +250,16 @@ public class Parser
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                        
                     }
 
-                    j = pozice-1;
+                    j = pozice - 1;
                     int test = 0;
 
                     while (double.Parse(pr1.hodnota) < double.Parse(pr2.hodnota))
                     {
-                        while ( test < listWhile.Count)
+                        while (test < listWhile.Count)
                         {
-                            ctiSlovo(listWhile[test]);
+                            ctiSlovo(listWhile[test], listy);
                             test++;
                         }
 
@@ -175,7 +267,8 @@ public class Parser
                         zjistiCoTamje(rovnoPr1, pr1, 0);
                         zjistiCoTamje(rovnoPr2, pr2, 0);
                     }
-                }else if (whileSplit2[1].Contains(">"))
+                }
+                else if (whileSplit2[1].Contains(">"))
                 {
                     Promenna pr1 = new Promenna();
                     Promenna pr2 = new Promenna();
@@ -237,17 +330,16 @@ public class Parser
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                       
                     }
 
-                    j = pozice-1;
+                    j = pozice - 1;
                     int test = 0;
 
                     while (double.Parse(pr1.hodnota) > double.Parse(pr2.hodnota))
                     {
                         while (test < listWhile.Count)
                         {
-                            ctiSlovo(listWhile[test]);
+                            ctiSlovo(listWhile[test], listy);
                             test++;
                         }
 
@@ -319,17 +411,16 @@ public class Parser
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                        
                     }
 
-                    j = pozice -1;
+                    j = pozice - 1;
                     int test = 0;
 
                     while (double.Parse(pr1.hodnota) == double.Parse(pr2.hodnota))
                     {
                         while (test < listWhile.Count)
                         {
-                            ctiSlovo(listWhile[test]);
+                            ctiSlovo(listWhile[test], listy);
                             test++;
                         }
 
@@ -401,17 +492,16 @@ public class Parser
                     }
                     catch (IndexOutOfRangeException e)
                     {
-                        
                     }
 
-                    j = pozice-1;
+                    j = pozice - 1;
                     int test = 0;
 
                     while (double.Parse(pr1.hodnota) != double.Parse(pr2.hodnota))
                     {
                         while (test < listWhile.Count)
                         {
-                            ctiSlovo(listWhile[test]);
+                            ctiSlovo(listWhile[test], listy);
                             test++;
                         }
 
@@ -424,6 +514,7 @@ public class Parser
             // jestli to je if
             else if (slovoHlavni.Contains("if"))
             {
+                jsemVIf = true;
                 string[] ifSplit1 = radkySplit[j].Split(':');
                 string[] ifSplit2 = ifSplit1[0].Split("if");
                 int uroven;
@@ -435,7 +526,8 @@ public class Parser
                     uroven = 3;
                     elseUroven = "      else:";
                     tab = "     ";
-                }else if(ifSplit1[0].Contains("   if"))
+                }
+                else if (ifSplit1[0].Contains("   if"))
                 {
                     uroven = 2;
                     elseUroven = "    else:";
@@ -516,33 +608,41 @@ public class Parser
                                 }
                                 else
                                 {
+                                    test = 0;
+
+                                    while (test < listIf.Count)
+                                    {
+                                        ctiSlovo(listIf[test], listy);
+                                        test++;
+                                    }
+                                    listIf.Clear();
+                                    
                                     dejNoveSlovo += radkySplit[pozice] + "\n";
                                     pozice++;
-                                    while (radkySplit[pozice].Contains("      ") || radkySplit[pozice].Contains("   else"))
+                                    while (radkySplit[pozice].Contains("      ") ||
+                                           radkySplit[pozice].Contains("   else"))
                                     {
                                         dejNoveSlovo += radkySplit[pozice] + "\n";
                                         pozice++;
                                     }
-                                
-                                    ctiSlovo(dejNoveSlovo);
-                                }
 
+                                    ctiSlovo(dejNoveSlovo, listy);
+                                }
                             }
                         }
                         catch (IndexOutOfRangeException e)
                         {
-                        
                         }
 
-                        j = pozice-1; 
+                        j = pozice - 1;
                         test = 0;
-                        
+
                         while (test < listIf.Count)
                         {
-                            ctiSlovo(listIf[test]);
+                            ctiSlovo(listIf[test], listy);
                             test++;
                         }
-                        
+
                         if (radkySplit[pozice].Equals(elseUroven))
                         {
                             pozice++;
@@ -556,10 +656,9 @@ public class Parser
                             }
                             catch (IndexOutOfRangeException e)
                             {
-                        
                             }
 
-                            j = pozice-1;
+                            j = pozice - 1;
                         }
                     }
                     else
@@ -586,25 +685,24 @@ public class Parser
                                     {
                                         dejNoveSlovo += radkySplit[pozice] + "\n";
                                         pozice++;
-                                        while (radkySplit[pozice].Contains("      ") || radkySplit[pozice].Contains("   else"))
+                                        while (radkySplit[pozice].Contains("      ") ||
+                                               radkySplit[pozice].Contains("   else"))
                                         {
                                             dejNoveSlovo += radkySplit[pozice] + "\n";
                                             pozice++;
                                         }
-                                
-                                        ctiSlovo(dejNoveSlovo);
+
+                                        ctiSlovo(dejNoveSlovo, listy);
                                     }
-                            
                                 }
                             }
                             catch (IndexOutOfRangeException e)
                             {
-                        
                             }
 
                             while (test < listIf.Count)
                             {
-                                ctiSlovo(listIf[test]);
+                                ctiSlovo(listIf[test], listy);
                                 test++;
                             }
 
@@ -618,6 +716,8 @@ public class Parser
                 else if (ifSplit2[1].Contains("<"))
                 {
                 }
+                jsemVIf = false;
+                promenneLocal.Clear();
             }
             //jestli to je promenna s type
             else if (slovoHlavni[slovoHlavni.Length - 1] == ':')
@@ -629,11 +729,19 @@ public class Parser
                 if (znamPromennou(splitSlova[0]) == false)
                 {
                     zjistiCoTamje(slova, pr, 1);
-                    promenne.Add(pr);
+                    if (jsemVIf == false)
+                    {
+                        promenneGlobal.Add(pr);
+                    }
+                    else
+                    {
+                        promenneLocal.Add(pr);
+                    }
+
                 }
                 else
                 {
-                    Console.WriteLine("Promenna " + slova[0] + " existuje ");
+                    Console.WriteLine("Promenna " + slova[0] + " uz existuje ");
                     Environment.Exit((int)ExitCode.VariableExist);
                 }
             }
@@ -642,7 +750,15 @@ public class Parser
             {
                 if (znamPromennou(slova[0]))
                 {
-                    foreach (var VARIABLE in promenne)
+                    foreach (var VARIABLE in promenneGlobal)
+                    {
+                        if (VARIABLE.nazev == slova[0])
+                        {
+                            zjistiCoTamje(slova, VARIABLE, 1);
+                        }
+                    }
+
+                    foreach (var VARIABLE in promenneLocal)
                     {
                         if (VARIABLE.nazev == slova[0])
                         {
@@ -670,6 +786,68 @@ public class Parser
         for (int i = zacatek; i < slova.Length; i++)
         {
             string slovo = slova[i];
+
+            if (slovo.Contains('(') && slovo.Contains(')')) // jestli to je volani fce
+            {
+                string[] test = slovo.Split('(');
+                string[] test1 = test[1].Split(')');
+                string[] test2 = test1[0].Split(',');
+
+                if (znamFunkci(test[0]))
+                {
+                    Funkce def = dejFunkci(test[0]);
+                    
+                    bool maReturn = false;
+                    foreach (var VARIABLE in def.teloFce)
+                    {
+                        if (VARIABLE.Contains("return"))
+                        {
+                            maReturn = true;
+                        }
+                    }
+
+                    if (def.navratovejTyp != null && maReturn)
+                    {
+                        
+                        
+                        if ((def.parametry.Count != 0 && test1[0] != "") ||
+                            (def.parametry.Count == 0 && test1[0] == ""))
+                        {
+                            string vstupDef = "";
+
+                            for (int j = 0; j < def.teloFce.Count; j++)
+                            {
+                                vstupDef += def.teloFce[j] + "\n";
+                            }
+
+                            if (def.parametry.Count != 0 && test1[0] != "")
+                            {
+                                for (int j = 0; j < def.parametry.Count; j++)
+                                {
+                                    try
+                                    {
+                                        def.promenneDef[j].hodnota = test2[j];
+                                    }
+                                    catch (IndexOutOfRangeException e)
+                                    {
+                                        Console.WriteLine("Chybi parametr u funkce: " + def.nazev);
+                                        Environment.Exit((int)ExitCode.ParameterMissing);
+                                    }
+                                }
+                            }
+
+                            ctiSlovo(vstupDef, def.promenneDef);
+                            slovo = promenneLocal[promenneLocal.Count - 1].hodnota;
+                            promenneLocal.Clear();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Funkce je void nebo nema return: " + def.nazev);
+                        Environment.Exit((int)ExitCode.DefType);
+                    }
+                }
+            }
 
             //jestli to je dotevej typ
             if (slovo == "int" | slovo == "string" | slovo == "double" | slovo == "bool")
@@ -1018,7 +1196,15 @@ public class Parser
 
     private bool znamPromennou(string slovo)
     {
-        foreach (var VARIABLE in promenne)
+        foreach (var VARIABLE in promenneGlobal)
+        {
+            if (VARIABLE.nazev == slovo)
+            {
+                return true;
+            }
+        }
+
+        foreach (var VARIABLE in promenneLocal)
         {
             if (VARIABLE.nazev == slovo)
             {
@@ -1028,12 +1214,12 @@ public class Parser
 
         return false;
     }
-    
+
     private bool znamFunkci(string slovo)
     {
         foreach (var VARIABLE in funkce)
         {
-            if (VARIABLE.nazev + "()" == slovo)
+            if (VARIABLE.nazev == slovo)
             {
                 return true;
             }
@@ -1044,7 +1230,15 @@ public class Parser
 
     private Promenna dejPromennou(string slovo)
     {
-        foreach (var VARIABLE in promenne)
+        foreach (var VARIABLE in promenneGlobal)
+        {
+            if (VARIABLE.nazev == slovo)
+            {
+                return VARIABLE;
+            }
+        }
+
+        foreach (var VARIABLE in promenneLocal)
         {
             if (VARIABLE.nazev == slovo)
             {
@@ -1054,12 +1248,12 @@ public class Parser
 
         return null;
     }
-    
+
     private Funkce dejFunkci(string slovo)
     {
         foreach (var VARIABLE in funkce)
         {
-            if (VARIABLE.nazev + "()" == slovo)
+            if (VARIABLE.nazev == slovo)
             {
                 return VARIABLE;
             }
