@@ -4,22 +4,7 @@
     <projectFile>SemInterpreter/SemInterpreter.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="Push">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/ExitCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/ExitCode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/Funkce.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/Funkce.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/Interpreter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/Interpreter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/Parser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/PocitaniCisla.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/PocitaniCisla.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/ref/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/ref/SemInterpreter.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/refint/SemInterpreter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/refint/SemInterpreter.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SemInterpreter/vstup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SemInterpreter/vstup.txt" afterDir="false" />
-    </list>
+    <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="Push" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +13,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/6f/1fd7b4d3/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/77/703f7211/Number.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/ExitCode.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -76,7 +62,7 @@
       <updated>1669647937080</updated>
       <workItem from="1669647939781" duration="13203000" />
       <workItem from="1669729865169" duration="2757000" />
-      <workItem from="1670078138884" duration="11248000" />
+      <workItem from="1670078138884" duration="11851000" />
     </task>
     <task id="LOCAL-00001" summary="Push">
       <created>1669919065029</created>
@@ -85,7 +71,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669919065029</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Push">
+      <created>1670100657656</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1670100657656</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
