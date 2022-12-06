@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaApplication1.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="AvaloniaApplication1.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SemestralniPrace"
+        Topmost="True"
+        WindowState="Maximized">
+    <Grid>
+        <Button Click="Load_Code" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,40,0">Load</Button>
+        <Button Click="Save_Code" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,100,0">Save</Button>
+        <Button Click="Run_Code" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,160,0">Run</Button>
+        <StackPanel Grid.Column="0" Name="a" HorizontalAlignment="Left">
+            <TextBox Name="VstupPole" Margin="10,10,0,20" Width="1650" Height="700" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox Name="VystupPole" Margin="10,00,0,20" Height="250" AcceptsReturn="True"></TextBox>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Name="Input" HorizontalAlignment="Right">
+            <TextBox Name="VystupPoleInput" Width="200" Margin="10,250,30,20"></TextBox>
+            <Button Name="OdeslatInput" Margin="10,0,0,0" Click="OdeslatInput_OnClick">Ok</Button>
+        </StackPanel>
+    </Grid>
+    
+
+</Window>

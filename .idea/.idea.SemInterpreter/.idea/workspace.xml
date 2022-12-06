@@ -6,6 +6,65 @@
   <component name="ChangeListManager">
     <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="Push">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/ExitCode.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Funkce.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Interpreter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Parser.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/PocitaniCisla.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/PocitaniString.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/Promenna.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/SemInterpreter.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/SemInterpreter" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/SemInterpreter.deps.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/SemInterpreter.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/SemInterpreter.runtimeconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net6.0/ref/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.deps.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/bin/Debug/net7.0/SemInterpreter.runtimeconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.AssemblyInfoInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.GlobalUsings.g.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.csproj.AssemblyReference.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.csproj.CoreCompileInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.csproj.FileListAbsolute.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.genruntimeconfig.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/SemInterpreter.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/apphost" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/ref/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net6.0/refint/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.AssemblyInfoInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.GlobalUsings.g.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.csproj.AssemblyReference.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.csproj.CoreCompileInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.csproj.FileListAbsolute.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.genruntimeconfig.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/SemInterpreter.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/apphost" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/ref/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/Debug/net7.0/refint/SemInterpreter.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/SemInterpreter.csproj.nuget.dgspec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/SemInterpreter.csproj.nuget.g.props" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/SemInterpreter.csproj.nuget.g.targets" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/project.assets.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/project.nuget.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/project.packagespec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/obj/rider.project.restore.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SemInterpreter/vstup.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +89,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/ondra/RiderProjects/AvaloniaApplication1/SemestralniPrace.sln",
+    "last_opened_file_path": "/home/ondra/RiderProjects/SemestratlniPrace",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -68,6 +127,7 @@
       <workItem from="1670165750438" duration="12000" />
       <workItem from="1670167959081" duration="2064000" />
       <workItem from="1670251875655" duration="13000" />
+      <workItem from="1670335115853" duration="126000" />
     </task>
     <task id="LOCAL-00001" summary="Push">
       <created>1669919065029</created>
@@ -90,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670100667775</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Push">
+      <created>1670335130317</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1670335130317</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,19 +208,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="87" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/SemInterpreter/Parser.cs</url>
-          <line>641</line>
-          <properties documentPath="$PROJECT_DIR$/SemInterpreter/Parser.cs" initialLine="636" containingFunctionPresentation="method 'ctiSlovo'">
-            <startOffsets>
-              <option value="22793" />
-            </startOffsets>
-            <endOffsets>
-              <option value="22823" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/SemInterpreter/Parser.cs</url>
