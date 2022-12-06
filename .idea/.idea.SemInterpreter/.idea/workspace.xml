@@ -4,7 +4,9 @@
     <projectFile>SemInterpreter/SemInterpreter.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="Push" />
+    <list default="true" id="9d9885f3-2232-4a24-b34b-1e9e98588fdf" name="Changes" comment="Push">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SemInterpreter/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,8 +14,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/6f/1fd7b4d3/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/77/703f7211/Number.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/ondra/RiderProjects/SemestratlniPrace/SemInterpreter/ExitCode.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/90194752319c45d595060b415de5c3dda28400/77/703f7211/Number.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -24,14 +25,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/ondra/RiderProjects/AvaloniaApplication1/SemestralniPrace.sln",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="SemInterpreter" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -62,7 +64,10 @@
       <updated>1669647937080</updated>
       <workItem from="1669647939781" duration="13203000" />
       <workItem from="1669729865169" duration="2757000" />
-      <workItem from="1670078138884" duration="11851000" />
+      <workItem from="1670078138884" duration="11945000" />
+      <workItem from="1670165750438" duration="12000" />
+      <workItem from="1670167959081" duration="2064000" />
+      <workItem from="1670251875655" duration="13000" />
     </task>
     <task id="LOCAL-00001" summary="Push">
       <created>1669919065029</created>
@@ -78,7 +83,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670100657656</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Push">
+      <created>1670100667775</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1670100667775</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
