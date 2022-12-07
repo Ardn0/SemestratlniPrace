@@ -14,15 +14,23 @@ public class Lexer
         _par = new Parser(this);
     }
     
-    public void CtiSlovo(string vstup, List<Promenna> listy)
+    public void CtiSlovo(string vstup, List<Promenna> listy, int pozice = 0)
     {
+        if (listy.Count != 0)
+        {
+            foreach (var VARIABLE in listy)
+            {
+                _par._promenneLocal.Add(VARIABLE);
+            }
+        }
+        
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
         radkySplit = _par.OdeberMezery(list, radkySplit);
         
 
-        for (int j = 0; j < radkySplit.Length; j++)
+        for (int j = pozice; j < radkySplit.Length; j++)
         {
             string[] slova = radkySplit[j].Split(' ');
             slova = _par.OdeberMezery(list, slova);
@@ -51,11 +59,11 @@ public class Lexer
             }
             else if (slovoHlavni.Contains("def")) // jestli to je vytvoreni fce
             {
-                _par.VytvoreniFce(j,slova,radkySplit);
+                j = _par.VytvoreniFce(j,slova,radkySplit);
             }
             else if (slovoHlavni.Contains("while")) // jestli to je while
             {
-                _par.While(radkySplit, j, list, listy);
+                j = _par.While(radkySplit, j, list, listy);
             }
             else if (slovoHlavni.Contains("if")) // jestli to je if
             {

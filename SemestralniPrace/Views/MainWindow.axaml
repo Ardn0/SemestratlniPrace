@@ -14,7 +14,7 @@
         <Button Click="Save_Code" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,100,0">Save</Button>
         <Button Click="Run_Code" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,160,0">Run</Button>
         <StackPanel Grid.Column="0" Name="a" HorizontalAlignment="Left">
-            <TextBox Name="VstupPole" Margin="10,10,0,20" Width="1650" Height="700" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox Name="VstupPole" Margin="10,10,0,20" Width="1650" Height="700" AcceptsReturn="True" TextWrapping="Wrap" AcceptsTab="True" />
             <TextBox Name="VystupPole" Margin="10,00,0,20" Height="250" AcceptsReturn="True"></TextBox>
         </StackPanel>
         <StackPanel Grid.Column="1" Name="Input" HorizontalAlignment="Right">

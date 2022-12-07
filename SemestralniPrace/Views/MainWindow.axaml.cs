@@ -80,5 +80,6 @@ public partial class MainWindow : Window
     {
         Parser.Input = VystupPoleInput.Text;
         Parser.Pokracuj = true;
+        VystupPoleInput.Text = "";
     }
 }

@@ -9,9 +9,9 @@ namespace AvaloniaApplication1.Interpreter;
 public class Parser
 {
     private Lexer _lex;
-    private static List<Promenna>? _promenneGlobal;
-    private static List<Promenna>? _promenneLocal;
-    private static List<Funkce>? _funkce;
+    private List<Promenna>? _promenneGlobal;
+    public List<Promenna>? _promenneLocal;
+    private List<Funkce>? _funkce;
     private Promenna _pr;
     private PocitaniCisla _pocc;
     private PocitaniString _pocs;
@@ -27,6 +27,66 @@ public class Parser
         _promenneLocal = new List<Promenna>();
         _funkce = new List<Funkce>();
         _lex = lex;
+        _funkce.Add(RandomInt());
+        _funkce.Add(RandomDouble());
+    }
+
+    private Funkce RandomInt()
+    {
+        Funkce randint = new Funkce();
+        randint.nazev = "randint";
+        randint.navratovejTyp = "int";
+        randint.parametry.Add("min: int");
+        randint.parametry.Add("max: int");
+        
+        Promenna min = new Promenna();
+        min.nazev = "min";
+        min.datovejTyp = "int";
+        
+        Promenna max = new Promenna();
+        max.nazev = "max";
+        max.datovejTyp = "int";
+        
+        Promenna random = new Promenna();
+        random.nazev = "random";
+        random.datovejTyp = "int";
+        
+        randint.promenneDef.Add(min);
+        randint.promenneDef.Add(max);
+        randint.promenneDef.Add(random);
+        
+        randint.teloFce.Add("return random");
+
+        return randint;
+    }
+    
+    private Funkce RandomDouble()
+    {
+        Funkce randdouble = new Funkce();
+        randdouble.nazev = "randdouble";
+        randdouble.navratovejTyp = "double";
+        randdouble.parametry.Add("min: double");
+        randdouble.parametry.Add("max: double");
+        
+        Promenna min = new Promenna();
+        min.nazev = "min";
+        min.datovejTyp = "double";
+        
+        Promenna max = new Promenna();
+        max.nazev = "max";
+        max.datovejTyp = "double";
+        
+        Promenna random = new Promenna();
+        random.nazev = "random";
+        random.datovejTyp = "double";
+        
+        randdouble.promenneDef.Add(min);
+        randdouble.promenneDef.Add(max);
+        randdouble.promenneDef.Add(random);
+        
+        randdouble.teloFce.Add("return random");
+
+        return randdouble;
     }
 
     public void Print(string[] radkySplit, int j)
@@ -47,6 +107,20 @@ public class Parser
             pr.datovejTyp = "double";
             pr.hodnota += ".0";
         }
+    }
+
+    public void RandomInt(string slovoHlavni)
+    {
+        string[] test = slovoHlavni.Split('(');
+        string[] test1 = test[1].Split(')');
+        string[] test2 = test1[0].Split(','); 
+
+        /*if (ZnamPromennou(test1[0]))
+        {
+            Promenna pr = DejPromennou(test1[0]);
+            pr.datovejTyp = "double";
+            pr.hodnota += ".0";
+        }*/
     }
 
     public void PretypovaninaInt(string slovoHlavni)
@@ -100,12 +174,12 @@ public class Parser
                 }
 
                 _lex.CtiSlovo(vstupDef, def.promenneDef);
-                _promenneLocal?.Clear();
+               _promenneLocal?.Clear();
             }
         }
     }
 
-    public void VytvoreniFce(int j, string[] slova, string[] radkySplit)
+    public int VytvoreniFce(int j, string[] slova, string[] radkySplit)
     {
         int pocet = j + 1;
         Funkce def = new Funkce();
@@ -152,7 +226,7 @@ public class Parser
 
             try
             {
-                while (radkySplit[pocet].Contains("   "))
+                while (radkySplit[pocet].Contains('\t'))
                 {
                     def.teloFce.Add(radkySplit[pocet]);
                     pocet++;
@@ -165,10 +239,14 @@ public class Parser
 
             j = pocet - 1;
             _funkce?.Add(def);
+            
+            return j;
         }
+
+        return j;
     }
 
-    public void While(string[] radkySplit, int j, List<string> list, List<Promenna> listy)
+    public int While(string[] radkySplit, int j, List<string> list, List<Promenna> listy)
     {
         string[] whileSplit1 = radkySplit[j].Split(':');
         string[] whileSplit2 = whileSplit1[0].Split("while");
@@ -227,7 +305,7 @@ public class Parser
             int pozice = j + 1;
             try
             {
-                while (radkySplit[pozice].Contains("   "))
+                while (radkySplit[pozice].Contains('\t'))
                 {
                     listWhile.Add(radkySplit[pozice]);
                     pozice++;
@@ -252,6 +330,8 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
+            
+            return j;
         }
         else if (whileSplit2[1].Contains(">"))
         {
@@ -307,7 +387,7 @@ public class Parser
             int pozice = j + 1;
             try
             {
-                while (radkySplit[pozice].Contains("   "))
+                while (radkySplit[pozice].Contains('\t'))
                 {
                     listWhile.Add(radkySplit[pozice]);
                     pozice++;
@@ -332,6 +412,7 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
+            return j;
         }
 
         if (whileSplit2[1].Contains("=="))
@@ -388,7 +469,7 @@ public class Parser
             int pozice = j + 1;
             try
             {
-                while (radkySplit[pozice].Contains("   "))
+                while (radkySplit[pozice].Contains('\t'))
                 {
                     listWhile.Add(radkySplit[pozice]);
                     pozice++;
@@ -413,6 +494,8 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
+            
+            return j;
         }
 
         if (whileSplit2[1].Contains("!="))
@@ -469,7 +552,7 @@ public class Parser
             int pozice = j + 1;
             try
             {
-                while (radkySplit[pozice].Contains("   "))
+                while (radkySplit[pozice].Contains('\t'))
                 {
                     listWhile.Add(radkySplit[pozice]);
                     pozice++;
@@ -494,7 +577,11 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
+            
+            return j;
         }
+        
+        return j;
     }
 
     public int If(string[] radkySplit, int j, List<string> list, List<Promenna> listy)
@@ -568,6 +655,21 @@ public class Parser
 
     public void PridelHodnotuPromenne(string[] slova)
     {
+        List<char> list = new List<char>();
+        list = slova[0].ToList();
+        while (list.Contains('\t'))
+        {
+            list.Remove(list[0]);
+        }
+
+        string novej = "";
+        for (int i = 0; i < list.Count; i++)
+        {
+            novej += list[i];
+        }
+
+        slova[0] =novej;
+
         if (ZnamPromennou(slova[0]))
         {
             if (_promenneGlobal != null)
@@ -639,11 +741,39 @@ public class Parser
 
                             if (def.parametry.Count != 0 && test1[0] != "")
                             {
-                                for (int j = 0; j < def.parametry.Count; j++)
+                                int pocetPar = def.parametry.Count;
+                                if (def.nazev.Contains("rand"))
+                                {
+                                    pocetPar = def.parametry.Count + 1;
+                                }
+                                
+                                for (int j = 0; j < pocetPar; j++)
                                 {
                                     try
                                     {
-                                        def.promenneDef[j].hodnota = test2[j];
+                                        if (def.promenneDef[j].nazev == "random")
+                                        {
+                                            if (def.navratovejTyp == "int")
+                                            {
+                                                Random ran = new Random();
+                                                int pokus = ran.Next(int.Parse(def.promenneDef[0].hodnota),
+                                                    int.Parse(def.promenneDef[1].hodnota));
+                                                def.promenneDef[j].hodnota = pokus.ToString();
+                                            }
+                                            else
+                                            {
+                                                Random ran = new Random();
+                                                double pokus = ran.NextDouble() * (double.Parse(def.promenneDef[1].hodnota)-
+                                                    double.Parse(def.promenneDef[0].hodnota)) + double.Parse(def.promenneDef[0].hodnota);
+                                                def.promenneDef[j].hodnota = pokus.ToString();
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            def.promenneDef[j].hodnota = test2[j];
+                                        }
+                                        
                                     }
                                     catch (IndexOutOfRangeException e)
                                     {
@@ -714,7 +844,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -736,8 +866,8 @@ public class Parser
                     }
                     else
                     {
-                        Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
-                        Environment.Exit((int)ExitCode.InvalidDataType);
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
             }
@@ -760,8 +890,8 @@ public class Parser
                     }
                     else
                     {
-                        Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
-                        Environment.Exit((int)ExitCode.InvalidDataType);
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
                 else
@@ -803,8 +933,8 @@ public class Parser
                     }
                     else
                     {
-                        Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
-                        Environment.Exit((int)ExitCode.InvalidDataType);
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
             }
@@ -896,14 +1026,14 @@ public class Parser
                     }
                     else
                     {
-                        Console.WriteLine("Spatnej datovej typ u promenne " + promenna.nazev);
-                        Environment.Exit((int)ExitCode.InvalidDataType);
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Toto neexistuje: " + slovo);
-                    Environment.Exit((int)ExitCode.UnknownError);
+                    VystpuChyba = "Toto neexistuje: " + slovo;
+                    //Environment.Exit((int)ExitCode.UnknownError);
                 }
             }
         }
@@ -1167,7 +1297,7 @@ public class Parser
                     pozice++;
                     try
                     {
-                        while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
+                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                         {
                             if (!radkySplit[pozice].Contains("if"))
                             {
@@ -1223,7 +1353,7 @@ public class Parser
                     pozice++;
                     try
                     {
-                        while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
+                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                         {
                             if (!radkySplit[pozice].Contains("if"))
                             {
@@ -1278,7 +1408,7 @@ public class Parser
                     pozice++;
                     try
                     {
-                        while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
+                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                         {
                             if (!radkySplit[pozice].Contains("if"))
                             {
@@ -1324,7 +1454,7 @@ public class Parser
     {
         try
         {
-            while (radkySplit[pozice].Contains("   ") && !radkySplit[pozice].Contains("else"))
+            while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
             {
                 if (!radkySplit[pozice].Contains("if"))
                 {
@@ -1374,7 +1504,7 @@ public class Parser
             pozice++;
             try
             {
-                while (radkySplit[pozice].Contains("   "))
+                while (radkySplit[pozice].Contains('\t'))
                 {
                     pozice++;
                 }
