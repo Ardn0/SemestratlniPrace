@@ -641,21 +641,24 @@ public class Parser
 
     public void PridelHodnotuPromenne(string[] slova)
     {
-        List<char> list = new List<char>();
-        list = slova[0].ToList();
-        while (list.Contains('\t'))
+        if (slova[0].Contains('\t'))
         {
-            list.Remove(list[0]);
+            List<char> list = new List<char>();
+            list = slova[0].ToList();
+            while (list.Contains('\t'))
+            {
+                list.Remove(list[0]);
+            }
+
+            string novej = "";
+            for (int i = 0; i < list.Count; i++)
+            {
+                novej += list[i];
+            }
+
+            slova[0] =novej;
         }
-
-        string novej = "";
-        for (int i = 0; i < list.Count; i++)
-        {
-            novej += list[i];
-        }
-
-        slova[0] =novej;
-
+        
         if (ZnamPromennou(slova[0]))
         {
             if (_promenneGlobal != null)
