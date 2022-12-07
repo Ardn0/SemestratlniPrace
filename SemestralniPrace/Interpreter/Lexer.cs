@@ -14,7 +14,7 @@ public class Lexer
         _par = new Parser(this);
     }
     
-    public void CtiSlovo(string vstup, List<Promenna> listy, int pozice = 0)
+    public void CtiSlovo(string vstup, List<Promenna> listy)
     {
         if (listy.Count != 0)
         {
@@ -30,7 +30,7 @@ public class Lexer
         radkySplit = _par.OdeberMezery(list, radkySplit);
         
 
-        for (int j = pozice; j < radkySplit.Length; j++)
+        for (int j = 0; j < radkySplit.Length; j++)
         {
             string[] slova = radkySplit[j].Split(' ');
             slova = _par.OdeberMezery(list, slova);

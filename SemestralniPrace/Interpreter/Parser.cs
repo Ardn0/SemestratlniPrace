@@ -109,20 +109,6 @@ public class Parser
         }
     }
 
-    public void RandomInt(string slovoHlavni)
-    {
-        string[] test = slovoHlavni.Split('(');
-        string[] test1 = test[1].Split(')');
-        string[] test2 = test1[0].Split(','); 
-
-        /*if (ZnamPromennou(test1[0]))
-        {
-            Promenna pr = DejPromennou(test1[0]);
-            pr.datovejTyp = "double";
-            pr.hodnota += ".0";
-        }*/
-    }
-
     public void PretypovaninaInt(string slovoHlavni)
     {
         string[] test = slovoHlavni.Split('(');
