@@ -1,19 +1,29 @@
+using System;
 using System.Collections.Generic;
 
-namespace SemInterpreter;
+namespace AvaloniaApplication1.Interpreter;
 
 public class Funkce
 {
-    public string nazev;
-    public List<string> teloFce;
-    public List<string> parametry;
-    public string navratovejTyp;
-    public List<Promenna> promenneDef;
+    private readonly string _nazev;
+    private readonly List<string> _teloFce;
+    private readonly List<string> _paramerty;
+    private readonly string _navratovejTyp;
+    private readonly List<Promenna> _promenneDef;
+    
+    public string Nazev => _nazev;
+    public List<string> TeloFce => _teloFce;
+    public List<string> Parametry => _paramerty;
+    public string NavratovejTyp => _navratovejTyp;
+    public List<Promenna> PromenneDef => _promenneDef;
 
-    public Funkce()
+    public Funkce(string nazev, string navratovejTyp, List<string> teloFce, List<string> parametry, List<Promenna> promenneDef)
     {
-        teloFce = new List<string>();
-        parametry = new List<string>();
-        promenneDef = new List<Promenna>();
+        _nazev = nazev ?? throw new ArgumentNullException(nameof(nazev));
+        _navratovejTyp = navratovejTyp ?? throw new ArgumentNullException(nameof(navratovejTyp));
+        _teloFce = teloFce ?? throw new ArgumentNullException(nameof(teloFce));
+        _paramerty = parametry ?? throw new ArgumentNullException(nameof(parametry));
+        _promenneDef = promenneDef ?? throw new ArgumentNullException(nameof(promenneDef));
     }
 }
+

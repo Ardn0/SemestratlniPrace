@@ -1,13 +1,33 @@
 using System.Collections.Generic;
-using SemInterpreter;
+using System.Threading.Tasks;
 
 namespace AvaloniaApplication1.Interpreter;
 
 public class Interpreter
 {
-    public Interpreter(string vstup)
+    private readonly Lexer _lex = new();
+    public string Vysptup => _lex.Vystup;
+    public string VystupChyba => _lex.VystupChyba;
+    public string Input
     {
-        Lexer lex = new Lexer();
-        lex.CtiSlovo(vstup,new List<Promenna>());
+        get => _lex.Input;
+        set => _lex.Input = value;
+    }
+
+    public bool Pokracuj
+    {
+        get => _lex.Pokracuj;
+        set => _lex.Pokracuj = value;
+    }
+
+    public Task Run(string vstup)
+    {
+        _lex.CtiSlovo(vstup,new List<Promenna>());
+        return Task.CompletedTask;
+    }
+
+    public void VymazVystup()
+    {
+        _lex.VymazVystup();
     }
 }

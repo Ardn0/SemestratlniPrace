@@ -1,4 +1,4 @@
-namespace SemInterpreter;
+namespace AvaloniaApplication1.Interpreter;
 
 public enum ExitCode
 {

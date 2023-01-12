@@ -1,99 +1,93 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using SemInterpreter;
 
 namespace AvaloniaApplication1.Interpreter;
 
 public class Parser
 {
     private Lexer _lex;
-    private List<Promenna>? _promenneGlobal;
-    public List<Promenna>? _promenneLocal;
-    private List<Funkce>? _funkce;
-    private Promenna _pr;
-    private PocitaniCisla _pocc;
-    private PocitaniString _pocs;
+    private List<Promenna> _promenneGlobal;
+    public List<Promenna> PromenneLocal;
+    private List<Funkce> _funkce;
+    private Promenna? _pr;
+    private PocitaniCisla? _pocc;
+    private PocitaniString? _pocs;
     private bool _jsemVIf;
-    public static string Vystup = "";
-    public static string VystpuChyba = "";
-    public static string Input = "";
-    public static bool Pokracuj = false;
+    private string _input;
+    private bool _pokracuj;
+    private string _vysput;
+    private string _vystupChyba;
+
+    public string Input
+    {
+        get => _input;
+        set => _input = value;
+    }
+
+    public bool Pokracuj
+    {
+        get => _pokracuj;
+        set => _pokracuj = value;
+    }
+
+    public string Vystup
+    {
+        get => _vysput;
+        private set => _vysput = value;
+    }
+
+    public string VystpuChyba
+    {
+        get => _vystupChyba;
+        private set => _vystupChyba = value;
+    }
 
     public Parser(Lexer lex)
     {
         _promenneGlobal = new List<Promenna>();
-        _promenneLocal = new List<Promenna>();
+        PromenneLocal = new List<Promenna>();
         _funkce = new List<Funkce>();
         _lex = lex;
         _funkce.Add(RandomInt());
         _funkce.Add(RandomDouble());
     }
 
+    public void VymazVystup()
+    {
+        Vystup = "";
+        VystpuChyba = "";
+    }
+
     private Funkce RandomInt()
     {
-        Funkce randint = new Funkce();
-        randint.nazev = "randint";
-        randint.navratovejTyp = "int";
-        randint.parametry.Add("min: int");
-        randint.parametry.Add("max: int");
-        
-        Promenna min = new Promenna();
-        min.nazev = "min";
-        min.datovejTyp = "int";
-        
-        Promenna max = new Promenna();
-        max.nazev = "max";
-        max.datovejTyp = "int";
-        
-        Promenna random = new Promenna();
-        random.nazev = "random";
-        random.datovejTyp = "int";
-        
-        randint.promenneDef.Add(min);
-        randint.promenneDef.Add(max);
-        randint.promenneDef.Add(random);
-        
-        randint.teloFce.Add("return random");
+        Promenna min = new Promenna("", "int", "min");
+        Promenna max = new Promenna("", "int", "max");
+        Promenna random = new Promenna("", "int", "random");
+
+        Funkce randint = new Funkce("randint", "int", new List<string>() { "return random" },
+            new List<string>() { "min: int", "max: int" }, new List<Promenna>() { min, max, random });
 
         return randint;
     }
-    
+
     private Funkce RandomDouble()
     {
-        Funkce randdouble = new Funkce();
-        randdouble.nazev = "randdouble";
-        randdouble.navratovejTyp = "double";
-        randdouble.parametry.Add("min: double");
-        randdouble.parametry.Add("max: double");
-        
-        Promenna min = new Promenna();
-        min.nazev = "min";
-        min.datovejTyp = "double";
-        
-        Promenna max = new Promenna();
-        max.nazev = "max";
-        max.datovejTyp = "double";
-        
-        Promenna random = new Promenna();
-        random.nazev = "random";
-        random.datovejTyp = "double";
-        
-        randdouble.promenneDef.Add(min);
-        randdouble.promenneDef.Add(max);
-        randdouble.promenneDef.Add(random);
-        
-        randdouble.teloFce.Add("return random");
+        Promenna min = new Promenna("", "double", "min");
+        Promenna max = new Promenna("", "double", "max");
+        Promenna random = new Promenna("", "double", "random");
+
+        Funkce randdouble = new Funkce("randdouble", "double", new List<string>() { "return random" },
+            new List<string>() { "min: double", "max: double" }, new List<Promenna>() { min, max, random });
 
         return randdouble;
     }
 
     public void Print(string[] radkySplit, int j)
     {
-        _pr = new Promenna();
-        FunkcePrint(radkySplit[j], _pr);
-        Vystup += _pr.hodnota + "\n";
+        Vystup += FunkcePrint(radkySplit[j]).Hodnota + "\n";
     }
 
     public void PretypovadinaDouble(string slovoHlavni)
@@ -103,9 +97,12 @@ public class Parser
 
         if (ZnamPromennou(test1[0]))
         {
-            Promenna pr = DejPromennou(test1[0]);
-            pr.datovejTyp = "double";
-            pr.hodnota += ".0";
+            Promenna? pr = DejPromennou(test1[0]);
+            if (pr != null)
+            {
+                pr.DatovejTyp = "double";
+                pr.Hodnota += ".0";
+            }
         }
     }
 
@@ -116,10 +113,13 @@ public class Parser
 
         if (ZnamPromennou(test1[0]))
         {
-            Promenna pr = DejPromennou(test1[0]);
-            pr.datovejTyp = "int";
-            int convert = (int)double.Parse(pr.hodnota);
-            pr.hodnota = convert.ToString();
+            Promenna? pr = DejPromennou(test1[0]);
+            if (pr != null)
+            {
+                pr.DatovejTyp = "int";
+                int convert = (int)double.Parse(pr.Hodnota);
+                pr.Hodnota = convert.ToString();
+            }
         }
     }
 
@@ -131,36 +131,36 @@ public class Parser
 
         if (ZnamFunkci(test[0]))
         {
-            Funkce def = DejFunkci(test[0]);
+            Funkce? def = DejFunkci(test[0]);
 
-            if ((def.parametry.Count != 0 && test1[0] != "") ||
-                (def.parametry.Count == 0 && test1[0] == ""))
+            if (def != null && ((def.Parametry.Count != 0 && test1[0] != "") ||
+                                (def.Parametry.Count == 0 && test1[0] == "")))
             {
                 string vstupDef = "";
 
-                for (int i = 0; i < def.teloFce.Count; i++)
+                for (int i = 0; i < def.TeloFce.Count; i++)
                 {
-                    vstupDef += def.teloFce[i] + "\n";
+                    vstupDef += def.TeloFce[i] + "\n";
                 }
 
-                if (def.parametry.Count != 0 && test1[0] != "")
+                if (def.Parametry.Count != 0 && test1[0] != "")
                 {
-                    for (int i = 0; i < def.parametry.Count; i++)
+                    for (int i = 0; i < def.Parametry.Count; i++)
                     {
                         try
                         {
-                            def.promenneDef[i].hodnota = test2[i];
+                            def.PromenneDef[i].Hodnota = test2[i];
                         }
-                        catch (IndexOutOfRangeException e)
+                        catch (IndexOutOfRangeException)
                         {
-                            Console.WriteLine("Chybi parametr u funkce: " + def.nazev);
+                            Console.WriteLine("Chybi parametr u funkce: " + def.Nazev);
                             Environment.Exit((int)ExitCode.ParameterMissing);
                         }
                     }
                 }
 
-                _lex.CtiSlovo(vstupDef, def.promenneDef);
-               _promenneLocal?.Clear();
+                _lex.CtiSlovo(vstupDef, def.PromenneDef);
+                PromenneLocal.Clear();
             }
         }
     }
@@ -168,13 +168,18 @@ public class Parser
     public int VytvoreniFce(int j, string[] slova, string[] radkySplit)
     {
         int pocet = j + 1;
-        Funkce def = new Funkce();
         string[] nazevFce = slova[1].Split('(');
-        def.nazev = nazevFce[0];
 
-        if (ZnamFunkci(def.nazev))
+        string jmeno = nazevFce[0];
+        string navratovejTyp = "";
+        List<string> parametry = new List<string>();
+        List<Promenna> promenne = new List<Promenna>();
+        List<String> teloFce = new List<string>();
+
+
+        if (ZnamFunkci(jmeno))
         {
-            Console.WriteLine("Funkce uz existuje: " + def.nazev);
+            Vystup += "Funkce uz existuje: " + jmeno;
             Environment.Exit((int)ExitCode.DefExist);
         }
         else
@@ -195,116 +200,128 @@ public class Parser
                 {
                     string[] test4 = test2[test2.Length - 1].Split("->");
                     string[] test5 = test4[1].Split(':');
-                    def.navratovejTyp = test5[0];
+                    navratovejTyp = test5[0];
                 }
 
-                foreach (var VARIABLE in test3)
+                foreach (var variable in test3)
                 {
-                    def.parametry.Add(VARIABLE);
-                    string[] test4 = VARIABLE.Split(':');
-                    Promenna pr = new Promenna();
-                    pr.nazev = test4[0];
-                    pr.datovejTyp = test4[1];
-                    def.promenneDef.Add(pr);
+                    parametry.Add(variable);
+                    string[] test4 = variable.Split(':');
+                    Promenna pr = new Promenna("", test4[1], test4[0]);
+                    promenne.Add(pr);
                 }
             }
-
 
             try
             {
                 while (radkySplit[pocet].Contains('\t'))
                 {
-                    def.teloFce.Add(radkySplit[pocet]);
+                    teloFce.Add(radkySplit[pocet]);
                     pocet++;
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
             }
 
-
             j = pocet - 1;
-            _funkce?.Add(def);
-            
+
+            Funkce novaFunkce = new Funkce(nazevFce[0], navratovejTyp, teloFce, parametry, promenne);
+
+            _funkce.Add(novaFunkce);
+
             return j;
         }
 
         return j;
     }
 
+    private (Promenna, Promenna, string[], string[]) WhileRozdelovac(string[] split, Promenna jedna, Promenna dva,
+        List<string> list, string[] radkySplit, int pozice, List<string> listWhile)
+    {
+        string[] rovnoPr1 = split[0].Split(" ");
+        string[] rovnoPr2 = split[1].Split(" ");
+
+        if (split[0].Any(char.IsNumber))
+        {
+            if (split[0].Contains("."))
+            {
+                jedna.DatovejTyp = "double";
+            }
+            else
+            {
+                jedna.DatovejTyp = "int";
+            }
+        }
+
+        if (split[1].Any(char.IsNumber))
+        {
+            if (split[1].Contains("."))
+            {
+                dva.DatovejTyp = "double";
+            }
+            else
+            {
+                dva.DatovejTyp = "int";
+            }
+        }
+
+        rovnoPr1 = OdeberMezery(list, rovnoPr1);
+        rovnoPr2 = OdeberMezery(list, rovnoPr2);
+
+
+        if (ZnamPromennou(rovnoPr1[0]))
+        {
+            var jednaDatovejTyp = DejPromennou(rovnoPr1[0])?.DatovejTyp;
+            if (jednaDatovejTyp != null) jedna.DatovejTyp = jednaDatovejTyp;
+        }
+
+        if (ZnamPromennou(rovnoPr2[0]))
+        {
+            var dvaDatovejTyp = DejPromennou(rovnoPr2[0])?.DatovejTyp;
+            if (dvaDatovejTyp != null) dva.DatovejTyp = dvaDatovejTyp;
+        }
+
+        ZjistiCoTamje(rovnoPr1, jedna, 0);
+        ZjistiCoTamje(rovnoPr2, dva, 0);
+
+        try
+        {
+            while (radkySplit[pozice].Contains('\t'))
+            {
+                listWhile.Add(radkySplit[pozice]);
+                pozice++;
+            }
+        }
+        catch (IndexOutOfRangeException)
+        {
+        }
+
+        return (jedna, dva, rovnoPr1, rovnoPr2);
+    }
+
     public int While(string[] radkySplit, int j, List<string> list, List<Promenna> listy)
     {
         string[] whileSplit1 = radkySplit[j].Split(':');
         string[] whileSplit2 = whileSplit1[0].Split("while");
+        string[] rovnoPr1;
+        string[] rovnoPr2;
+        Promenna pr1 = new Promenna("", "", "");
+        Promenna pr2 = new Promenna("", "", "");
+
 
         if (whileSplit2[1].Contains("<"))
         {
-            Promenna pr1 = new Promenna();
-            Promenna pr2 = new Promenna();
-
             string[] rovnoRovno = whileSplit2[1].Split("<");
-            string[] rovnoPr1 = rovnoRovno[0].Split(" ");
-            string[] rovnoPr2 = rovnoRovno[1].Split(" ");
-
-            if (rovnoRovno[0].Any(char.IsNumber))
-            {
-                if (rovnoRovno[0].Contains("."))
-                {
-                    pr1.datovejTyp = "double";
-                }
-                else
-                {
-                    pr1.datovejTyp = "int";
-                }
-            }
-
-            if (rovnoRovno[1].Any(char.IsNumber))
-            {
-                if (rovnoRovno[1].Contains("."))
-                {
-                    pr2.datovejTyp = "double";
-                }
-                else
-                {
-                    pr2.datovejTyp = "int";
-                }
-            }
-
-            rovnoPr1 = OdeberMezery(list, rovnoPr1);
-            rovnoPr2 = OdeberMezery(list, rovnoPr2);
-
-
-            if (ZnamPromennou(rovnoPr1[0]))
-            {
-                pr1.datovejTyp = DejPromennou(rovnoPr1[0]).datovejTyp;
-            }
-
-            if (ZnamPromennou(rovnoPr2[0]))
-            {
-                pr2.datovejTyp = DejPromennou(rovnoPr2[0]).datovejTyp;
-            }
-
-            ZjistiCoTamje(rovnoPr1, pr1, 0);
-            ZjistiCoTamje(rovnoPr2, pr2, 0);
-
             List<string> listWhile = new List<string>();
             int pozice = j + 1;
-            try
-            {
-                while (radkySplit[pozice].Contains('\t'))
-                {
-                    listWhile.Add(radkySplit[pozice]);
-                    pozice++;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-            }
+
+            (pr1, pr2, rovnoPr1, rovnoPr2) = WhileRozdelovac(rovnoRovno, pr1, pr2, list, radkySplit, pozice, listWhile);
 
             j = pozice - 1;
             int test = 0;
 
-            while (double.Parse(pr1.hodnota) < double.Parse(pr2.hodnota))
+            while (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota)-1)
             {
                 while (test < listWhile.Count)
                 {
@@ -316,77 +333,22 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
-            
+
             return j;
         }
-        else if (whileSplit2[1].Contains(">"))
+
+        if (whileSplit2[1].Contains(">"))
         {
-            Promenna pr1 = new Promenna();
-            Promenna pr2 = new Promenna();
-
             string[] rovnoRovno = whileSplit2[1].Split(">");
-            string[] rovnoPr1 = rovnoRovno[0].Split(" ");
-            string[] rovnoPr2 = rovnoRovno[1].Split(" ");
-
-            if (rovnoRovno[0].Any(char.IsNumber))
-            {
-                if (rovnoRovno[0].Contains("."))
-                {
-                    pr1.datovejTyp = "double";
-                }
-                else
-                {
-                    pr1.datovejTyp = "int";
-                }
-            }
-
-            if (rovnoRovno[1].Any(char.IsNumber))
-            {
-                if (rovnoRovno[1].Contains("."))
-                {
-                    pr2.datovejTyp = "double";
-                }
-                else
-                {
-                    pr2.datovejTyp = "int";
-                }
-            }
-
-            rovnoPr1 = OdeberMezery(list, rovnoPr1);
-            rovnoPr2 = OdeberMezery(list, rovnoPr2);
-
-
-            if (ZnamPromennou(rovnoPr1[0]))
-            {
-                pr1.datovejTyp = DejPromennou(rovnoPr1[0]).datovejTyp;
-            }
-
-            if (ZnamPromennou(rovnoPr2[0]))
-            {
-                pr2.datovejTyp = DejPromennou(rovnoPr2[0]).datovejTyp;
-            }
-
-            ZjistiCoTamje(rovnoPr1, pr1, 0);
-            ZjistiCoTamje(rovnoPr2, pr2, 0);
-
             List<string> listWhile = new List<string>();
             int pozice = j + 1;
-            try
-            {
-                while (radkySplit[pozice].Contains('\t'))
-                {
-                    listWhile.Add(radkySplit[pozice]);
-                    pozice++;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-            }
+
+            (pr1, pr2, rovnoPr1, rovnoPr2) = WhileRozdelovac(rovnoRovno, pr1, pr2, list, radkySplit, pozice, listWhile);
 
             j = pozice - 1;
             int test = 0;
 
-            while (double.Parse(pr1.hodnota) > double.Parse(pr2.hodnota))
+            while (double.Parse(pr1.Hodnota) > double.Parse(pr2.Hodnota))
             {
                 while (test < listWhile.Count)
                 {
@@ -398,77 +360,22 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
+
             return j;
         }
 
         if (whileSplit2[1].Contains("=="))
         {
-            Promenna pr1 = new Promenna();
-            Promenna pr2 = new Promenna();
-
             string[] rovnoRovno = whileSplit2[1].Split("==");
-            string[] rovnoPr1 = rovnoRovno[0].Split(" ");
-            string[] rovnoPr2 = rovnoRovno[1].Split(" ");
-
-            if (rovnoRovno[0].Any(char.IsNumber))
-            {
-                if (rovnoRovno[0].Contains("."))
-                {
-                    pr1.datovejTyp = "double";
-                }
-                else
-                {
-                    pr1.datovejTyp = "int";
-                }
-            }
-
-            if (rovnoRovno[1].Any(char.IsNumber))
-            {
-                if (rovnoRovno[1].Contains("."))
-                {
-                    pr2.datovejTyp = "double";
-                }
-                else
-                {
-                    pr2.datovejTyp = "int";
-                }
-            }
-
-            rovnoPr1 = OdeberMezery(list, rovnoPr1);
-            rovnoPr2 = OdeberMezery(list, rovnoPr2);
-
-
-            if (ZnamPromennou(rovnoPr1[0]))
-            {
-                pr1.datovejTyp = DejPromennou(rovnoPr1[0]).datovejTyp;
-            }
-
-            if (ZnamPromennou(rovnoPr2[0]))
-            {
-                pr2.datovejTyp = DejPromennou(rovnoPr2[0]).datovejTyp;
-            }
-
-            ZjistiCoTamje(rovnoPr1, pr1, 0);
-            ZjistiCoTamje(rovnoPr2, pr2, 0);
-
             List<string> listWhile = new List<string>();
             int pozice = j + 1;
-            try
-            {
-                while (radkySplit[pozice].Contains('\t'))
-                {
-                    listWhile.Add(radkySplit[pozice]);
-                    pozice++;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-            }
+
+            (pr1, pr2, rovnoPr1, rovnoPr2) = WhileRozdelovac(rovnoRovno, pr1, pr2, list, radkySplit, pozice, listWhile);
 
             j = pozice - 1;
             int test = 0;
 
-            while (double.Parse(pr1.hodnota) == double.Parse(pr2.hodnota))
+            while (double.Parse(pr1.Hodnota) == double.Parse(pr2.Hodnota))
             {
                 while (test < listWhile.Count)
                 {
@@ -480,78 +387,22 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
-            
+
             return j;
         }
 
         if (whileSplit2[1].Contains("!="))
         {
-            Promenna pr1 = new Promenna();
-            Promenna pr2 = new Promenna();
-
             string[] rovnoRovno = whileSplit2[1].Split("!=");
-            string[] rovnoPr1 = rovnoRovno[0].Split(" ");
-            string[] rovnoPr2 = rovnoRovno[1].Split(" ");
-
-            if (rovnoRovno[0].Any(char.IsNumber))
-            {
-                if (rovnoRovno[0].Contains("."))
-                {
-                    pr1.datovejTyp = "double";
-                }
-                else
-                {
-                    pr1.datovejTyp = "int";
-                }
-            }
-
-            if (rovnoRovno[1].Any(char.IsNumber))
-            {
-                if (rovnoRovno[1].Contains("."))
-                {
-                    pr2.datovejTyp = "double";
-                }
-                else
-                {
-                    pr2.datovejTyp = "int";
-                }
-            }
-
-            rovnoPr1 = OdeberMezery(list, rovnoPr1);
-            rovnoPr2 = OdeberMezery(list, rovnoPr2);
-
-
-            if (ZnamPromennou(rovnoPr1[0]))
-            {
-                pr1.datovejTyp = DejPromennou(rovnoPr1[0]).datovejTyp;
-            }
-
-            if (ZnamPromennou(rovnoPr2[0]))
-            {
-                pr2.datovejTyp = DejPromennou(rovnoPr2[0]).datovejTyp;
-            }
-
-            ZjistiCoTamje(rovnoPr1, pr1, 0);
-            ZjistiCoTamje(rovnoPr2, pr2, 0);
-
             List<string> listWhile = new List<string>();
             int pozice = j + 1;
-            try
-            {
-                while (radkySplit[pozice].Contains('\t'))
-                {
-                    listWhile.Add(radkySplit[pozice]);
-                    pozice++;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-            }
+
+            (pr1, pr2, rovnoPr1, rovnoPr2) = WhileRozdelovac(rovnoRovno, pr1, pr2, list, radkySplit, pozice, listWhile);
 
             j = pozice - 1;
             int test = 0;
 
-            while (double.Parse(pr1.hodnota) != double.Parse(pr2.hodnota))
+            while (double.Parse(pr1.Hodnota) != double.Parse(pr2.Hodnota))
             {
                 while (test < listWhile.Count)
                 {
@@ -563,10 +414,10 @@ public class Parser
                 ZjistiCoTamje(rovnoPr1, pr1, 0);
                 ZjistiCoTamje(rovnoPr2, pr2, 0);
             }
-            
+
             return j;
         }
-        
+
         return j;
     }
 
@@ -576,7 +427,6 @@ public class Parser
         string[] ifSplit1 = radkySplit[j].Split(':');
         string[] ifSplit2 = ifSplit1[0].Split("if");
         string elseUroven;
-        int pozice = 0;
 
         if (ifSplit1[0].Contains("          if"))
         {
@@ -609,27 +459,26 @@ public class Parser
         }
 
         _jsemVIf = false;
-        _promenneLocal?.Clear();
+        PromenneLocal.Clear();
 
         return 0;
     }
 
     public void VytvoreniPromenne(string slovoHlavni, string[] slova)
     {
-        _pr = new Promenna();
         string[] splitSlova = slovoHlavni.Split(':');
-        _pr.nazev = splitSlova[0];
+        _pr = new Promenna("", "", splitSlova[0]);
 
         if (ZnamPromennou(splitSlova[0]) == false)
         {
             ZjistiCoTamje(slova, _pr, 1);
             if (_jsemVIf == false)
             {
-                _promenneGlobal?.Add(_pr);
+                _promenneGlobal.Add(_pr);
             }
             else
             {
-                _promenneLocal?.Add(_pr);
+                PromenneLocal.Add(_pr);
             }
         }
         else
@@ -643,7 +492,7 @@ public class Parser
     {
         if (slova[0].Contains('\t'))
         {
-            List<char> list = new List<char>();
+            List<char> list;
             list = slova[0].ToList();
             while (list.Contains('\t'))
             {
@@ -656,28 +505,26 @@ public class Parser
                 novej += list[i];
             }
 
-            slova[0] =novej;
+            slova[0] = novej;
         }
-        
+
         if (ZnamPromennou(slova[0]))
         {
-            if (_promenneGlobal != null)
-                foreach (var VARIABLE in _promenneGlobal)
+            foreach (var variable in _promenneGlobal)
+            {
+                if (variable.Nazev == slova[0])
                 {
-                    if (VARIABLE.nazev == slova[0])
-                    {
-                        ZjistiCoTamje(slova, VARIABLE, 1);
-                    }
+                    ZjistiCoTamje(slova, variable, 1);
                 }
+            }
 
-            if (_promenneLocal != null)
-                foreach (var VARIABLE in _promenneLocal)
+            foreach (var variable in PromenneLocal)
+            {
+                if (variable.Nazev == slova[0])
                 {
-                    if (VARIABLE.nazev == slova[0])
-                    {
-                        ZjistiCoTamje(slova, VARIABLE, 1);
-                    }
+                    ZjistiCoTamje(slova, variable, 1);
                 }
+            }
         }
         else
         {
@@ -686,12 +533,10 @@ public class Parser
         }
     }
 
-    private Task ZjistiCoTamje(string[] slova, Promenna promenna, int zacatek)
+    private void ZjistiCoTamje(string[] slova, Promenna promenna, int zacatek)
     {
         string pocitaniVstup = "";
-        _pocc = new PocitaniCisla();
         _pocs = new PocitaniString();
-        string skladaneSlovo;
 
         for (int i = zacatek; i < slova.Length; i++)
         {
@@ -705,86 +550,92 @@ public class Parser
 
                 if (ZnamFunkci(test[0]))
                 {
-                    Funkce def = DejFunkci(test[0]);
+                    Funkce? def = DejFunkci(test[0]);
 
                     bool maReturn = false;
-                    foreach (var VARIABLE in def.teloFce)
+                    if (def != null)
                     {
-                        if (VARIABLE.Contains("return"))
+                        foreach (var variable in def.TeloFce)
                         {
-                            maReturn = true;
-                        }
-                    }
-
-                    if (def.navratovejTyp != null && maReturn)
-                    {
-                        if ((def.parametry.Count != 0 && test1[0] != "") ||
-                            (def.parametry.Count == 0 && test1[0] == ""))
-                        {
-                            string vstupDef = "";
-
-                            for (int j = 0; j < def.teloFce.Count; j++)
+                            if (variable.Contains("return"))
                             {
-                                vstupDef += def.teloFce[j] + "\n";
+                                maReturn = true;
                             }
+                        }
 
-                            if (def.parametry.Count != 0 && test1[0] != "")
+                        if (maReturn)
+                        {
+                            if ((def.Parametry.Count != 0 && test1[0] != "") ||
+                                (def.Parametry.Count == 0 && test1[0] == ""))
                             {
-                                int pocetPar = def.parametry.Count;
-                                if (def.nazev.Contains("rand"))
+                                string vstupDef = "";
+
+                                for (int j = 0; j < def.TeloFce.Count; j++)
                                 {
-                                    pocetPar = def.parametry.Count + 1;
+                                    vstupDef += def.TeloFce[j] + "\n";
                                 }
-                                
-                                for (int j = 0; j < pocetPar; j++)
+
+                                if (def.Parametry.Count != 0 && test1[0] != "")
                                 {
-                                    try
+                                    int pocetPar = def.Parametry.Count;
+                                    if (def.Nazev.Contains("rand"))
                                     {
-                                        if (def.promenneDef[j].nazev == "random")
+                                        pocetPar = def.Parametry.Count + 1;
+                                    }
+
+                                    for (int j = 0; j < pocetPar; j++)
+                                    {
+                                        try
                                         {
-                                            if (def.navratovejTyp == "int")
+                                            if (def.PromenneDef[j].Nazev == "random")
                                             {
-                                                Random ran = new Random();
-                                                int pokus = ran.Next(int.Parse(def.promenneDef[0].hodnota),
-                                                    int.Parse(def.promenneDef[1].hodnota));
-                                                def.promenneDef[j].hodnota = pokus.ToString();
+                                                if (def.NavratovejTyp == "int")
+                                                {
+                                                    Random ran = new Random();
+                                                    int pokus = ran.Next(int.Parse(def.PromenneDef[0].Hodnota),
+                                                        int.Parse(def.PromenneDef[1].Hodnota));
+                                                    def.PromenneDef[j].Hodnota = pokus.ToString();
+                                                }
+                                                else
+                                                {
+                                                    Random ran = new Random();
+                                                    double pokus = ran.NextDouble() *
+                                                                   (double.Parse(def.PromenneDef[1].Hodnota) -
+                                                                    double.Parse(def.PromenneDef[0].Hodnota)) +
+                                                                   double.Parse(def.PromenneDef[0].Hodnota);
+                                                    def.PromenneDef[j].Hodnota =
+                                                        pokus.ToString(CultureInfo.InvariantCulture);
+                                                }
                                             }
                                             else
                                             {
-                                                Random ran = new Random();
-                                                double pokus = ran.NextDouble() * (double.Parse(def.promenneDef[1].hodnota)-
-                                                    double.Parse(def.promenneDef[0].hodnota)) + double.Parse(def.promenneDef[0].hodnota);
-                                                def.promenneDef[j].hodnota = pokus.ToString();
+                                                def.PromenneDef[j].Hodnota = test2[j];
                                             }
-                                            
                                         }
-                                        else
+                                        catch (IndexOutOfRangeException)
                                         {
-                                            def.promenneDef[j].hodnota = test2[j];
+                                            Console.WriteLine("Chybi parametr u funkce: " + def.Nazev);
+                                            Environment.Exit((int)ExitCode.ParameterMissing);
                                         }
-                                        
-                                    }
-                                    catch (IndexOutOfRangeException e)
-                                    {
-                                        Console.WriteLine("Chybi parametr u funkce: " + def.nazev);
-                                        Environment.Exit((int)ExitCode.ParameterMissing);
                                     }
                                 }
-                            }
 
-                            _lex.CtiSlovo(vstupDef, def.promenneDef);
-                            slovo = _promenneLocal?[_promenneLocal.Count - 1].hodnota;
-                            _promenneLocal?.Clear();
+                                _lex.CtiSlovo(vstupDef, def.PromenneDef);
+                                var hodnota = PromenneLocal?[PromenneLocal.Count - 1].Hodnota;
+                                if (hodnota != null)
+                                    slovo = hodnota;
+                                PromenneLocal?.Clear();
+                            }
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Funkce je void nebo nema return: " + def.nazev);
-                        Environment.Exit((int)ExitCode.DefType);
+                        else
+                        {
+                            Console.WriteLine("Funkce je void nebo nema return: " + def.Nazev);
+                            Environment.Exit((int)ExitCode.DefType);
+                        }
                     }
                 }
 
-                if (slovo != null && slovo.Contains("input"))
+                if (slovo.Contains("input"))
                 {
                     while (Pokracuj == false)
                     {
@@ -800,53 +651,53 @@ public class Parser
             {
                 if (slovo == "int")
                 {
-                    promenna.datovejTyp = "int";
+                    promenna.DatovejTyp = "int";
                 }
                 else if (slovo == "double")
                 {
-                    promenna.datovejTyp = "double";
+                    promenna.DatovejTyp = "double";
                 }
                 else if (slovo == "string")
                 {
-                    promenna.datovejTyp = "string";
+                    promenna.DatovejTyp = "string";
                 }
                 else if (slovo == "bool")
                 {
-                    promenna.datovejTyp = "bool";
+                    promenna.DatovejTyp = "bool";
                 }
             }
             // jestli to je number
-            else if (slovo != null && slovo.Any(char.IsNumber))
+            else if (slovo.Any(char.IsNumber))
             {
                 if (slovo.Contains("."))
                 {
-                    if (promenna.datovejTyp == "double")
+                    if (promenna.DatovejTyp == "double")
                     {
                         pocitaniVstup += slovo + " ";
 
                         if (i == slova.Length - 1)
                         {
-                            _pocc.vstup = pocitaniVstup;
+                            _pocc = new PocitaniCisla(pocitaniVstup);
                             _pocc.NactiVyraz();
-                            promenna.hodnota = _pocc.zasobnikCisel.ElementAt(0).ToString();
+                            promenna.Hodnota = _pocc.ZasobnikCisel.ElementAt(0).ToString(CultureInfo.InvariantCulture);
                         }
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
                 else
                 {
-                    if (promenna.datovejTyp == "int")
+                    if (promenna.DatovejTyp == "int")
                     {
                         if (i == slova.Length - 1)
                         {
                             pocitaniVstup += slovo;
-                            _pocc.vstup = pocitaniVstup;
+                            _pocc = new PocitaniCisla(pocitaniVstup);
                             _pocc.NactiVyraz();
-                            promenna.hodnota = _pocc.zasobnikCisel.ElementAt(0).ToString();
+                            promenna.Hodnota = _pocc.ZasobnikCisel.ElementAt(0).ToString(CultureInfo.InvariantCulture);
                         }
                         else
                         {
@@ -855,7 +706,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -869,23 +720,23 @@ public class Parser
                 {
                     pocitaniVstup += slovo;
 
-                    if (promenna.datovejTyp == "string")
+                    if (promenna.DatovejTyp == "string")
                     {
                         if (i == slova.Length || i == slova.Length - 1)
                         {
-                            string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                            promenna.hodnota = noveSlovo;
+                            string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                            promenna.Hodnota = noveSlovo;
                         }
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
                 else
                 {
-                    skladaneSlovo = slovo;
+                    var skladaneSlovo = slovo;
                     int j = i + 1;
 
                     try
@@ -904,7 +755,7 @@ public class Parser
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                     }
 
@@ -912,50 +763,50 @@ public class Parser
 
                     i = j;
 
-                    if (promenna.datovejTyp == "string")
+                    if (promenna.DatovejTyp == "string")
                     {
                         if (i == slova.Length || i == slova.Length - 1)
                         {
-                            string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                            promenna.hodnota = noveSlovo;
+                            string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                            promenna.Hodnota = noveSlovo;
                         }
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
             }
             else if (slovo == "true" || slovo == "false")
             {
-                if (promenna.datovejTyp == "bool")
+                if (promenna.DatovejTyp == "bool")
                 {
                     if (slovo == "true")
                     {
-                        promenna.hodnota = "true";
+                        promenna.Hodnota = "true";
                     }
                     else
                     {
-                        promenna.hodnota = "false";
+                        promenna.Hodnota = "false";
                     }
                 }
             }
             else if (slovo is "+" or "-" or "*" or "/" or "==" or ">" or "<" or "and" or "or")
             {
-                if (slovo == "+" && promenna.datovejTyp is "int" or "double")
+                if (slovo == "+" && promenna.DatovejTyp is "int" or "double")
                 {
                     pocitaniVstup += "+ ";
                 }
-                else if (slovo == "-" && promenna.datovejTyp is "int" or "double")
+                else if (slovo == "-" && promenna.DatovejTyp is "int" or "double")
                 {
                     pocitaniVstup += "- ";
                 }
-                else if (slovo == "*" && promenna.datovejTyp is "int" or "double")
+                else if (slovo == "*" && promenna.DatovejTyp is "int" or "double")
                 {
                     pocitaniVstup += "* ";
                 }
-                else if (slovo == "/" && promenna.datovejTyp is "int" or "double")
+                else if (slovo == "/" && promenna.DatovejTyp is "int" or "double")
                 {
                     pocitaniVstup += "/ ";
                 }
@@ -972,50 +823,50 @@ public class Parser
             {
                 if (ZnamPromennou(slovo))
                 {
-                    Promenna prNova = DejPromennou(slovo);
-                    if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "string")
+                    Promenna? prNova = DejPromennou(slovo);
+                    if (prNova?.DatovejTyp == promenna.DatovejTyp && promenna.DatovejTyp == "string")
                     {
-                        pocitaniVstup += '"' + prNova.hodnota + '"';
+                        pocitaniVstup += '"' + prNova.Hodnota + '"';
 
                         if (i == slova.Length || i == slova.Length - 1)
                         {
-                            string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                            promenna.hodnota = noveSlovo;
+                            string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                            promenna.Hodnota = noveSlovo;
                         }
                     }
-                    else if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "int")
+                    else if (prNova?.DatovejTyp == promenna.DatovejTyp && promenna.DatovejTyp == "int")
                     {
                         if (pocitaniVstup == "")
                         {
-                            pocitaniVstup += int.Parse(prNova.hodnota) + " ";
+                            pocitaniVstup += int.Parse(prNova.Hodnota) + " ";
                         }
                         else
                         {
-                            pocitaniVstup += int.Parse(prNova.hodnota);
+                            pocitaniVstup += int.Parse(prNova.Hodnota);
                         }
 
 
                         if (i == slova.Length || i == slova.Length - 1)
                         {
-                            _pocc.vstup = pocitaniVstup;
+                            _pocc = new PocitaniCisla(pocitaniVstup);
                             _pocc.NactiVyraz();
-                            promenna.hodnota = _pocc.zasobnikCisel.ElementAt(0).ToString();
+                            promenna.Hodnota = _pocc.ZasobnikCisel.ElementAt(0).ToString(CultureInfo.InvariantCulture);
                         }
                     }
-                    else if (prNova.datovejTyp == promenna.datovejTyp && promenna.datovejTyp == "double")
+                    else if (prNova?.DatovejTyp == promenna.DatovejTyp && promenna.DatovejTyp == "double")
                     {
-                        pocitaniVstup += double.Parse(prNova.hodnota);
+                        pocitaniVstup += double.Parse(prNova.Hodnota);
 
                         if (i == slova.Length || i == slova.Length - 1)
                         {
-                            _pocc.vstup = pocitaniVstup;
+                            _pocc = new PocitaniCisla(pocitaniVstup);
                             _pocc.NactiVyraz();
-                            promenna.hodnota = _pocc.zasobnikCisel.ElementAt(0).ToString();
+                            promenna.Hodnota = _pocc.ZasobnikCisel.ElementAt(0).ToString(CultureInfo.InvariantCulture);
                         }
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.nazev;
+                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -1026,19 +877,19 @@ public class Parser
                 }
             }
         }
-
-        return Task.CompletedTask;
     }
 
-    private void FunkcePrint(string slovoPrint, Promenna promenna)
+    private Promenna FunkcePrint(string slovoPrint)
     {
         string[] uvozovka1 = slovoPrint.Split("(");
         string[] uvozovka2 = uvozovka1[uvozovka1.Length - 1].Split(")");
         string[] slova = uvozovka2[0].Split(',');
         string pocitaniVstup = "";
-        _pocc = new PocitaniCisla();
         _pocs = new PocitaniString();
-        string skladaneSlovo = "";
+        string skladaneSlovo;
+
+        string hodnota = "";
+        string datovejTyp = "";
 
         for (int i = 0; i < slova.Length; i++)
         {
@@ -1051,8 +902,8 @@ public class Parser
 
                 if (i == slova.Length - 1)
                 {
-                    string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                    promenna.hodnota = noveSlovo;
+                    string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                    hodnota = noveSlovo;
                 }
             }
             // jestli to je string
@@ -1066,8 +917,8 @@ public class Parser
 
                     if (i == slova.Length || i == slova.Length - 1)
                     {
-                        string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                        promenna.hodnota = noveSlovo;
+                        string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                        hodnota = noveSlovo;
                     }
                 }
                 else
@@ -1091,7 +942,7 @@ public class Parser
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                     }
 
@@ -1101,22 +952,22 @@ public class Parser
 
                     if (i == slova.Length || i == slova.Length - 1)
                     {
-                        string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                        promenna.hodnota = noveSlovo;
+                        string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                        hodnota = noveSlovo;
                     }
                 }
             }
             else if (slovo == "true" || slovo == "false")
             {
-                if (promenna.datovejTyp == "bool")
+                if (datovejTyp == "bool")
                 {
                     if (slovo == "true")
                     {
-                        promenna.hodnota = "true";
+                        hodnota = "true";
                     }
                     else
                     {
-                        promenna.hodnota = "false";
+                        hodnota = "false";
                     }
                 }
             }
@@ -1124,38 +975,38 @@ public class Parser
             {
                 if (ZnamPromennou(slovo))
                 {
-                    Promenna prNova = DejPromennou(slovo);
-                    pocitaniVstup += '"' + prNova.hodnota + '"';
+                    Promenna? prNova = DejPromennou(slovo);
+                    pocitaniVstup += '"' + prNova?.Hodnota + '"';
 
                     if (i == slova.Length || i == slova.Length - 1)
                     {
-                        string noveSlovo = _pocs.nactiVyraz(pocitaniVstup);
-                        promenna.hodnota = noveSlovo;
+                        string noveSlovo = _pocs.NactiVyraz(pocitaniVstup);
+                        hodnota = noveSlovo;
                     }
                 }
                 else
                 {
                     VystpuChyba = "Toto v mem jazyku neexistuje: " + slovo;
-                    //Console.WriteLine("Toto v mem jazyku neexistuje: " + slovo);
-                    //Environment.Exit((int)ExitCode.UnknownError);
                 }
             }
         }
+
+        return new Promenna(hodnota, datovejTyp, "");
     }
 
     private bool ZnamPromennou(string slovo)
     {
-        foreach (var VARIABLE in _promenneGlobal)
+        foreach (var variable in _promenneGlobal)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
                 return true;
             }
         }
 
-        foreach (var VARIABLE in _promenneLocal)
+        foreach (var variable in PromenneLocal)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
                 return true;
             }
@@ -1166,9 +1017,9 @@ public class Parser
 
     private bool ZnamFunkci(string slovo)
     {
-        foreach (var VARIABLE in _funkce)
+        foreach (var variable in _funkce)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
                 return true;
             }
@@ -1177,34 +1028,34 @@ public class Parser
         return false;
     }
 
-    private Promenna DejPromennou(string slovo)
+    private Promenna? DejPromennou(string slovo)
     {
-        foreach (var VARIABLE in _promenneGlobal)
+        foreach (var variable in _promenneGlobal)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
-                return VARIABLE;
+                return variable;
             }
         }
 
-        foreach (var VARIABLE in _promenneLocal)
+        foreach (var variable in PromenneLocal)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
-                return VARIABLE;
+                return variable;
             }
         }
 
         return null;
     }
 
-    private Funkce DejFunkci(string slovo)
+    private Funkce? DejFunkci(string slovo)
     {
-        foreach (var VARIABLE in _funkce)
+        foreach (var variable in _funkce)
         {
-            if (VARIABLE.nazev == slovo)
+            if (variable.Nazev == slovo)
             {
-                return VARIABLE;
+                return variable;
             }
         }
 
@@ -1214,22 +1065,21 @@ public class Parser
     private int VneIf(string znak, string[] ifSplit2, List<string> list, int j, string[] radkySplit,
         List<Promenna> listy, string elseUroven)
     {
-        Promenna pr1 = new Promenna();
-        Promenna pr2 = new Promenna();
-
         string[] rovnoRovno = ifSplit2[1].Split(znak);
         string[] rovnoPr1 = rovnoRovno[0].Split(" ");
         string[] rovnoPr2 = rovnoRovno[1].Split(" ");
+        string datovejTypPr1 = "";
+        string datovejTypPr2 = "";
 
         if (rovnoRovno[0].Any(char.IsNumber))
         {
             if (rovnoRovno[0].Contains("."))
             {
-                pr1.datovejTyp = "double";
+                datovejTypPr1 = "double";
             }
             else
             {
-                pr1.datovejTyp = "int";
+                datovejTypPr1 = "int";
             }
         }
 
@@ -1237,11 +1087,11 @@ public class Parser
         {
             if (rovnoRovno[1].Contains("."))
             {
-                pr2.datovejTyp = "double";
+                datovejTypPr2 = "double";
             }
             else
             {
-                pr2.datovejTyp = "int";
+                datovejTypPr2 = "int";
             }
         }
 
@@ -1251,13 +1101,18 @@ public class Parser
 
         if (ZnamPromennou(rovnoPr1[0]))
         {
-            pr1.datovejTyp = DejPromennou(rovnoPr1[0]).datovejTyp;
+            var datovejTyp = DejPromennou(rovnoPr1[0])?.DatovejTyp;
+            if (datovejTyp != null) datovejTypPr1 = datovejTyp;
         }
 
         if (ZnamPromennou(rovnoPr2[0]))
         {
-            pr2.datovejTyp = DejPromennou(rovnoPr2[0]).datovejTyp;
+            var datovejTyp = DejPromennou(rovnoPr2[0])?.DatovejTyp;
+            if (datovejTyp != null) datovejTypPr2 = datovejTyp;
         }
+
+        Promenna pr1 = new Promenna("", datovejTypPr1, "");
+        Promenna pr2 = new Promenna("", datovejTypPr2, "");
 
         ZjistiCoTamje(rovnoPr1, pr1, 0);
         ZjistiCoTamje(rovnoPr2, pr2, 0);
@@ -1270,12 +1125,13 @@ public class Parser
 
         if (znak == "==")
         {
-            if (double.Parse(pr1.hodnota) == double.Parse(pr2.hodnota))
+            if (double.Parse(pr1.Hodnota) == double.Parse(pr2.Hodnota))
             {
                 return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }else
+            }
+            else
             {
-                while (!radkySplit[pozice].Equals(elseUroven))
+                while (!radkySplit[pozice].Equals("\t"+elseUroven))
                 {
                     pozice++;
                 }
@@ -1308,7 +1164,7 @@ public class Parser
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                     }
 
@@ -1320,16 +1176,16 @@ public class Parser
 
                     j = pozice - 1;
                     return j;
-
                 }
             }
         }
         else if (znak == ">")
         {
-            if (double.Parse(pr1.hodnota) > double.Parse(pr2.hodnota))
+            if (double.Parse(pr1.Hodnota) > double.Parse(pr2.Hodnota))
             {
                 return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }else
+            }
+            else
             {
                 while (!radkySplit[pozice].Equals(elseUroven))
                 {
@@ -1364,7 +1220,7 @@ public class Parser
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                     }
 
@@ -1381,10 +1237,11 @@ public class Parser
         }
         else if (znak == "<")
         {
-            if (double.Parse(pr1.hodnota) < double.Parse(pr2.hodnota))
+            if (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota))
             {
                 return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }else
+            }
+            else
             {
                 while (!radkySplit[pozice].Equals(elseUroven))
                 {
@@ -1419,7 +1276,7 @@ public class Parser
                             }
                         }
                     }
-                    catch (IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException)
                     {
                     }
 
@@ -1475,7 +1332,7 @@ public class Parser
                 }
             }
         }
-        catch (IndexOutOfRangeException e)
+        catch (IndexOutOfRangeException)
         {
         }
 
@@ -1488,7 +1345,7 @@ public class Parser
             test++;
         }
 
-        if (radkySplit[pozice].Equals(elseUroven))
+        if (radkySplit[pozice].Equals("\t"+elseUroven))
         {
             pozice++;
             try
@@ -1498,13 +1355,13 @@ public class Parser
                     pozice++;
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
             }
 
             j = pozice - 1;
         }
-        
+
         return j;
     }
 

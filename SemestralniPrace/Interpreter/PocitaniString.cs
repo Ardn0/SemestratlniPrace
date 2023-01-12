@@ -1,33 +1,32 @@
-namespace SemInterpreter;
+namespace AvaloniaApplication1.Interpreter;
 
 public class PocitaniString
 {
-    private int ukazatel;
-    private string[] splitPomocna;
+    private string[]? _splitPomocna;
 
-    public string nactiVyraz(string vstup)
+    public string NactiVyraz(string vstup)
     {
         string novejString = "";
         string[] splitZbavitSeUvozovek = vstup.Split('"');
         vstup = "";
-        foreach (var VARIABLE in splitZbavitSeUvozovek)
+        foreach (var variable in splitZbavitSeUvozovek)
         {
-            if (VARIABLE != "")
+            if (variable != "")
             {
-                vstup += VARIABLE;
+                vstup += variable;
             }
         }
-        splitPomocna = vstup.Split(" ");
+        _splitPomocna = vstup.Split(" ");
 
-        for (int i = 0; i < splitPomocna.Length; i++)
+        for (int i = 0; i < _splitPomocna.Length; i++)
         {
-            if(i != splitPomocna.Length -1)
+            if(i != _splitPomocna.Length -1)
             {
-                novejString += splitPomocna[i] + " ";
+                novejString += _splitPomocna[i] + " ";
             }
             else
             {
-                novejString += splitPomocna[i];
+                novejString += _splitPomocna[i];
             }
         }
 

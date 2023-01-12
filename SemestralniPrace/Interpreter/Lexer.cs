@@ -1,34 +1,51 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using SemInterpreter;
 
 namespace AvaloniaApplication1.Interpreter;
 
 public class Lexer
 {
     private Parser _par;
+    public string Vystup => _par.Vystup;
+    public string VystupChyba => _par.VystpuChyba;
+
+    public string Input
+    {
+        get => _par.Input;
+        set => _par.Input = value;
+    }
+
+    public bool Pokracuj
+    {
+        get => _par.Pokracuj;
+        set => _par.Pokracuj = value;
+    }
 
     public Lexer()
     {
         _par = new Parser(this);
     }
-    
+
+    public void VymazVystup()
+    {
+        _par.VymazVystup();
+    }
+
     public void CtiSlovo(string vstup, List<Promenna> listy)
     {
         if (listy.Count != 0)
         {
-            foreach (var VARIABLE in listy)
+            foreach (var variable in listy)
             {
-                _par._promenneLocal.Add(VARIABLE);
+                if (_par.PromenneLocal != null) _par.PromenneLocal.Add(variable);
             }
         }
-        
+
         string[] radkySplit = vstup.Split('\n');
         var list = radkySplit.ToList();
 
         radkySplit = _par.OdeberMezery(list, radkySplit);
-        
+
 
         for (int j = 0; j < radkySplit.Length; j++)
         {
@@ -36,10 +53,10 @@ public class Lexer
             slova = _par.OdeberMezery(list, slova);
 
             string slovoHlavni = slova[0];
-            
+
             if (slovoHlavni.Contains("print")) // jestli to je print
             {
-                _par.Print(radkySplit,j);
+                _par.Print(radkySplit, j);
             }
             else if (slovoHlavni.Contains("return"))
             {
@@ -47,7 +64,7 @@ public class Lexer
             }
             else if (slovoHlavni.Contains("double")) // jestli to je pretypovani
             {
-               _par.PretypovadinaDouble(slovoHlavni);
+                _par.PretypovadinaDouble(slovoHlavni);
             }
             else if (slovoHlavni.Contains("int")) // jestli to je pretypovani
             {
@@ -59,7 +76,7 @@ public class Lexer
             }
             else if (slovoHlavni.Contains("def")) // jestli to je vytvoreni fce
             {
-                j = _par.VytvoreniFce(j,slova,radkySplit);
+                j = _par.VytvoreniFce(j, slova, radkySplit);
             }
             else if (slovoHlavni.Contains("while")) // jestli to je while
             {
@@ -67,15 +84,15 @@ public class Lexer
             }
             else if (slovoHlavni.Contains("if")) // jestli to je if
             {
-              j = _par.If(radkySplit, j, list, listy);
+                j = _par.If(radkySplit, j, list, listy);
             }
-            else if (slovoHlavni[slovoHlavni.Length - 1] == ':')  // jestli to je vytvoreni promenne
+            else if (slovoHlavni[slovoHlavni.Length - 1] == ':') // jestli to je vytvoreni promenne
             {
-                _par.VytvoreniPromenne(slovoHlavni,slova);
+                _par.VytvoreniPromenne(slovoHlavni, slova);
             }
             else if (slova[1] == "=") // jestli to je prirazeni hodnoty do promenne
             {
-               _par.PridelHodnotuPromenne(slova);
+                _par.PridelHodnotuPromenne(slova);
             }
         }
     }

@@ -1,22 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
-namespace SemInterpreter
+namespace AvaloniaApplication1.Interpreter
 {
     internal class PocitaniCisla
     {
-        public string vstup = "";
-        private int ukazatel;
-        public Stack<double> zasobnikCisel = new Stack<double>();
-        private string[] splitPomocna;
+        public Stack<double> ZasobnikCisel { get;}
+        
+        private int _ukazatel;
+        private string[]? _splitPomocna;
+        private readonly string _vstup;
+
+        public PocitaniCisla(string vstup)
+        {
+            _vstup = vstup;
+            ZasobnikCisel = new Stack<double>();
+        }
 
         public bool NactiVyraz()
         {
             string? znamenkoOperator;
 
-            splitPomocna = vstup.Split(" ");
+            _splitPomocna = _vstup.Split(" ");
 
             while (true)
             {
@@ -24,9 +30,9 @@ namespace SemInterpreter
 
                 try
                 {
-                    znamenkoOperator = NactiPlusMinusNic(splitPomocna);
+                    znamenkoOperator = NactiPlusMinusNic(_splitPomocna);
                 }
-                catch (IndexOutOfRangeException e)
+                catch (IndexOutOfRangeException)
                 {
                     znamenkoOperator = null;
                 }
@@ -43,23 +49,23 @@ namespace SemInterpreter
 
                 if (znamenkoOperator == "+")
                 {
-                    ukazatel++;
+                    _ukazatel++;
                     NactiTerm();
 
-                    h1 = zasobnikCisel.ElementAt(zasobnikCisel.Count - (zasobnikCisel.Count - 1));
-                    h2 = zasobnikCisel.ElementAt(zasobnikCisel.Count - zasobnikCisel.Count);
+                    h1 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - (ZasobnikCisel.Count - 1));
+                    h2 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - ZasobnikCisel.Count);
                     vysledek = h1 + h2;
-                    zasobnikCisel.Push(vysledek);
+                    ZasobnikCisel.Push(vysledek);
                 }
                 else if (znamenkoOperator == "-")
                 {
-                    ukazatel++;
+                    _ukazatel++;
                     NactiTerm();
 
-                    h1 = zasobnikCisel.ElementAt(zasobnikCisel.Count - (zasobnikCisel.Count - 1));
-                    h2 = zasobnikCisel.ElementAt(zasobnikCisel.Count - zasobnikCisel.Count);
+                    h1 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - (ZasobnikCisel.Count - 1));
+                    h2 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - ZasobnikCisel.Count);
                     vysledek = h1 - h2;
-                    zasobnikCisel.Push(vysledek);
+                    ZasobnikCisel.Push(vysledek);
                 }
             }
         }
@@ -74,9 +80,9 @@ namespace SemInterpreter
             {
                 try
                 {
-                    znamenkoOperator = NactiKratDelenoNic(splitPomocna);
+                    znamenkoOperator = NactiKratDelenoNic(_splitPomocna);
                 }
-                catch (IndexOutOfRangeException e)
+                catch (IndexOutOfRangeException)
                 {
                     znamenkoOperator = null;
                 }
@@ -92,34 +98,34 @@ namespace SemInterpreter
 
                 if (znamenkoOperator == "*")
                 {
-                    ukazatel++;
+                    _ukazatel++;
                     NactiTerm();
 
-                    h1 = zasobnikCisel.ElementAt(zasobnikCisel.Count - (zasobnikCisel.Count - 1));
-                    h2 = zasobnikCisel.ElementAt(zasobnikCisel.Count - zasobnikCisel.Count);
+                    h1 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - (ZasobnikCisel.Count - 1));
+                    h2 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - ZasobnikCisel.Count);
                     vysledek = h1 * h2;
-                    zasobnikCisel.Pop();
-                    zasobnikCisel.Pop();
-                    zasobnikCisel.Push(vysledek);
+                    ZasobnikCisel.Pop();
+                    ZasobnikCisel.Pop();
+                    ZasobnikCisel.Push(vysledek);
                 }
                 else if (znamenkoOperator == "/")
                 {
-                    ukazatel++;
+                    _ukazatel++;
                     NactiTerm();
 
-                    h1 = zasobnikCisel.ElementAt(zasobnikCisel.Count - (zasobnikCisel.Count - 1));
-                    h2 = zasobnikCisel.ElementAt(zasobnikCisel.Count - zasobnikCisel.Count);
+                    h1 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - (ZasobnikCisel.Count - 1));
+                    h2 = ZasobnikCisel.ElementAt(ZasobnikCisel.Count - ZasobnikCisel.Count);
                     vysledek = h1 / h2;
-                    zasobnikCisel.Pop();
-                    zasobnikCisel.Pop();
-                    zasobnikCisel.Push(vysledek);
+                    ZasobnikCisel.Pop();
+                    ZasobnikCisel.Pop();
+                    ZasobnikCisel.Push(vysledek);
                 }
             }
         }
 
         public bool NactiFaktor()
         {
-            if (NactiCislo(splitPomocna) == true)
+            if (NactiCislo(_splitPomocna))
             {
                 return true;
             }
@@ -129,42 +135,42 @@ namespace SemInterpreter
             }
         }
 
-        public bool NactiCislo(string[] pomocna)
+        public bool NactiCislo(string[]? pomocna)
         {
             try
             {
-                if (pomocna[ukazatel] == " " || pomocna[ukazatel] == "" || !pomocna[ukazatel].Any(char.IsNumber))
+                if (pomocna != null && (pomocna[_ukazatel] == " " || pomocna[_ukazatel] == "" || !pomocna[_ukazatel].Any(char.IsNumber)))
                 {
                     return false;
                 }
                 else
                 {
-                    zasobnikCisel.Push(double.Parse(pomocna[ukazatel]));
-                    ukazatel++;
+                    if (pomocna != null) ZasobnikCisel.Push(double.Parse(pomocna[_ukazatel]));
+                    _ukazatel++;
                     return true;
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 return false;
             }
         }
 
-        public string? NactiPlusMinusNic(string[] vstup)
+        public string? NactiPlusMinusNic(string[] vstupNacti)
         {
-            if (vstup[ukazatel] == "+" || vstup[ukazatel] == "-")
+            if (vstupNacti[_ukazatel] == "+" || vstupNacti[_ukazatel] == "-")
             {
-                return vstup[ukazatel];
+                return vstupNacti[_ukazatel];
             }
 
             return null;
         }
 
-        public string? NactiKratDelenoNic(string[] vstup)
+        public string? NactiKratDelenoNic(string[]? vstupNacti)
         {
-            if (vstup[ukazatel] == "*" || vstup[ukazatel] == "/")
+            if (vstupNacti != null && (vstupNacti[_ukazatel] == "*" || vstupNacti[_ukazatel] == "/"))
             {
-                return vstup[ukazatel];
+                return vstupNacti[_ukazatel];
             }
             else
             {

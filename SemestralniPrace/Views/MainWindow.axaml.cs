@@ -1,85 +1,75 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Input.TextInput;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using AvaloniaApplication1.Interpreter;
-using SemInterpreter;
 
 namespace AvaloniaApplication1.Views;
 
 public partial class MainWindow : Window
 {
+    private Interpreter.Interpreter _inter;
     public MainWindow()
     {
         InitializeComponent();
     }
-
-    private Task Run()
+    
+    private async Task Run()
     {
-        Parser.Vystup = "";
-        Parser.VystpuChyba = "";
-        Interpreter.Interpreter inter = new Interpreter.Interpreter(VstupPole.Text);
-        Dispatcher.UIThread.Post(() =>  VystupPole.Text = Parser.Vystup , DispatcherPriority.Background);
-        if (Parser.VystpuChyba != "")
+        _inter = new();
+        _inter.VymazVystup();
+        await _inter.Run(VstupPole.Text);
+        VystupPole.Text = _inter.Vysptup;
+        if (_inter.VystupChyba != "")
         {
-            Dispatcher.UIThread.Post(() =>  VystupPole.Text = Parser.VystpuChyba , DispatcherPriority.Background);
+            VystupPole.Text = _inter.VystupChyba;
         }
+    }
 
-        return Task.CompletedTask;
+    private async void Run_Code(object? sender, RoutedEventArgs e)
+    {
+        await Run();
     }
     
-
-    private void Run_Code(object? sender, RoutedEventArgs e)
-    {
-        Task.Run(() =>
-        {
-            Run();
-        });
-    }
-
     private async void Save_Code(object? sender, RoutedEventArgs e)
     {
         SaveFileDialog dialog = new SaveFileDialog();
         dialog.Title = "Code save";
         dialog.InitialFileName = "YourCode";
         dialog.DefaultExtension = ".txt";
+        FileDialogFilter filter = new FileDialogFilter();
+        filter.Name = "Text Files";
+        filter.Extensions.Add("txt");
+        dialog.Filters.Add(filter);
         var result = await dialog.ShowAsync(this);
-        string vstupTxt = "";
-        foreach (var VARIABLE in result)
-        {
-            vstupTxt += VARIABLE;
-        }
 
-        File.WriteAllText(vstupTxt, VstupPole.Text);
+        if (result != null)
+        {
+            File.WriteAllText(result, VstupPole.Text, Encoding.UTF8);
+        }
     }
 
     private async void Load_Code(object? sender, RoutedEventArgs e)
     {
         OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Filters.Add(new FileDialogFilter { Name = "Text Files", Extensions = { "txt" } });
         dialog.Title = "Load code";
         var result = await dialog.ShowAsync(this);
-        string vstupTxt = "";
-        foreach (var VARIABLE in result)
-        {
-            vstupTxt += VARIABLE;
-        }
 
-        StreamReader reader = new StreamReader(vstupTxt);
-        string text = reader.ReadToEnd();
-        VstupPole.Text = text;
+        if (result != null)
+        {
+            var vstupTxt = string.Join("", result);
+            var text = File.ReadAllText(vstupTxt);
+            VstupPole.Text = text;
+        }
     }
+
 
     private void OdeslatInput_OnClick(object? sender, RoutedEventArgs e)
     {
-        Parser.Input = VystupPoleInput.Text;
-        Parser.Pokracuj = true;
+        _inter.Input = VystupPoleInput.Text;
+        _inter.Pokracuj = true;
         VystupPoleInput.Text = "";
     }
 }
