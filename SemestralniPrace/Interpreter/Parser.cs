@@ -149,11 +149,19 @@ public class Parser
                     {
                         try
                         {
-                            def.PromenneDef[i].Hodnota = test2[i];
+                            if (ZnamPromennou(test2[i]))
+                            {
+                                Promenna fceProm = DejPromennou(test2[i]);
+                                def.PromenneDef[i].Hodnota = fceProm.Hodnota;
+                            }
+                            else
+                            {
+                                def.PromenneDef[i].Hodnota = test2[i];
+                            }
                         }
                         catch (IndexOutOfRangeException)
                         {
-                            Console.WriteLine("Chybi parametr u funkce: " + def.Nazev);
+                            VystpuChyba = "Chybi parametr u funkce: " + def.Nazev;
                             Environment.Exit((int)ExitCode.ParameterMissing);
                         }
                     }
@@ -449,11 +457,11 @@ public class Parser
         {
             return VneIf("==", ifSplit2, list, j, radkySplit, listy, elseUroven);
         }
-        else if (ifSplit2[1].Contains(">"))
+        if (ifSplit2[1].Contains(">"))
         {
             return VneIf(">", ifSplit2, list, j, radkySplit, listy, elseUroven);
         }
-        else if (ifSplit2[1].Contains("<"))
+        if (ifSplit2[1].Contains("<"))
         {
             return VneIf("<", ifSplit2, list, j, radkySplit, listy, elseUroven);
         }
@@ -1345,7 +1353,7 @@ public class Parser
             test++;
         }
 
-        if (radkySplit[pozice].Equals("\t"+elseUroven))
+        if (radkySplit[pozice].Equals(elseUroven))
         {
             pozice++;
             try
