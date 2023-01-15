@@ -10,6 +10,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 {
     private readonly Window _window;
     private bool _dialogOtevren;
+    private string _programBezi = "Run";
 
     public MainWindowViewModel(Window window)
     {
@@ -19,6 +20,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private Interpreter.Interpreter? _inter;
     private string? _mujKod;
     private string? _vystup;
+    private string? _vstupInput;
+
+    public string ProgramBezi
+    {
+        get => _programBezi;
+        set
+        {
+            _programBezi = value;
+            OnPropertyChanged("ProgramBezi");
+        }
+    }
 
     public string? MujKod
     {
@@ -40,6 +52,16 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public string? VstupInput
+    {
+        get => _vstupInput;
+        set
+        {
+            _vstupInput = value;
+            OnPropertyChanged("VstupInput");
+        }
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void OnPropertyChanged(string propertyName)
@@ -47,23 +69,42 @@ public class MainWindowViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private async Task Run()
+    private void Run_Code()
     {
-        _inter = new();
-        _inter.VymazVystup();
-        if (MujKod != null) await _inter.Run(MujKod);
-        Vystup = _inter.Vysptup;
-        if (_inter.VystupChyba != "")
+        if (ProgramBezi != "Stop")
         {
-            Vystup = _inter.VystupChyba;
+            _inter = new();
+            _inter.VymazVystup();
+
+            Task.Run(() =>
+            {
+                if (MujKod != " ")
+                {
+                    ProgramBezi = "Stop";
+                    _inter.Run(MujKod);
+                    if (ProgramBezi == "Stop")
+                    {
+                        if (_inter.Vystup != "")
+                        {
+                            Vystup = _inter.Vystup;
+                        }
+
+                        if (_inter.VystupChyba != "")
+                        {
+                            Vystup = _inter.VystupChyba;
+                        }
+                    }
+                }
+
+                ProgramBezi = "Run";
+            });
+        }
+        else
+        {
+            ProgramBezi = "Run";
+            Vystup = "Code canceled";
         }
     }
-
-    private async void Run_Code()
-    {
-        await Run();
-    }
-
 
     private async void Save_Code()
     {
@@ -89,7 +130,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
             if (result != null)
             {
-                File.WriteAllText(result, MujKod, Encoding.UTF8);
+                await File.WriteAllTextAsync(result, MujKod, Encoding.UTF8);
             }
         }
         finally
@@ -117,7 +158,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
             if (result != null)
             {
                 var vstupTxt = string.Join("", result);
-                var text = File.ReadAllText(vstupTxt);
+                var text = await File.ReadAllTextAsync(vstupTxt);
                 MujKod = text;
             }
         }
@@ -127,11 +168,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-
     private void OdeslatInput_OnClick()
     {
-        _inter.Input = Vystup;
+        _inter.Input = VstupInput;
         _inter.Pokracuj = true;
-        Vystup = "";
+        VstupInput = "";
     }
 }

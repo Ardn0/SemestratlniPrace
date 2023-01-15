@@ -7,7 +7,7 @@ public class Lexer
 {
     private Parser _par;
     public string Vystup => _par.Vystup;
-    public string VystupChyba => _par.VystpuChyba;
+    public string VystupChyba => _par.VystpupChyba;
 
     public string Input
     {
@@ -49,8 +49,18 @@ public class Lexer
 
         for (int j = 0; j < radkySplit.Length; j++)
         {
-            string[] slova = radkySplit[j].Split(' ');
+            string[] slova = new string[1];
+            if (radkySplit[j].Contains("(") && radkySplit[j].Contains(")") && !radkySplit[j].Contains("def") && !radkySplit[j].Contains("print") && !radkySplit[j].Contains("input"))
+            {
+                slova[0] = radkySplit[j];
+            }
+            else
+            {
+                slova = radkySplit[j].Split(' ');
+            }
+
             slova = _par.OdeberMezery(list, slova);
+
 
             string slovoHlavni = slova[0];
 

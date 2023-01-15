@@ -39,7 +39,7 @@ public class Parser
         private set => _vysput = value;
     }
 
-    public string VystpuChyba
+    public string VystpupChyba
     {
         get => _vystupChyba;
         private set => _vystupChyba = value;
@@ -58,7 +58,7 @@ public class Parser
     public void VymazVystup()
     {
         Vystup = "";
-        VystpuChyba = "";
+        VystpupChyba = "";
     }
 
     private Funkce RandomInt()
@@ -143,6 +143,12 @@ public class Parser
                     vstupDef += def.TeloFce[i] + "\n";
                 }
 
+                if (def.Parametry.Count < test2.Length && test2[0] != "")
+                {
+                    VystpupChyba = "Moc parametru u funce " + def.Nazev;
+                    return;
+                }
+
                 if (def.Parametry.Count != 0 && test1[0] != "")
                 {
                     for (int i = 0; i < def.Parametry.Count; i++)
@@ -156,19 +162,40 @@ public class Parser
                             }
                             else
                             {
-                                def.PromenneDef[i].Hodnota = test2[i];
+                                if (def.PromenneDef[i].DatovejTyp == "int" &&
+                                    (test2[i].Any(char.IsNumber) && !test2.Contains(",")))
+                                {
+                                    def.PromenneDef[i].Hodnota = test2[i];
+                                }
+                                else if (def.PromenneDef[i].DatovejTyp == "double" &&
+                                         (test2[i].Any(char.IsNumber) && test2.Contains(",")))
+                                {
+                                    def.PromenneDef[i].Hodnota = test2[i];
+                                }
+                                else if (def.PromenneDef[i].DatovejTyp == "string" && !test2[i].Any(char.IsNumber))
+                                {
+                                    def.PromenneDef[i].Hodnota = test2[i];
+                                }
+                                else
+                                {
+                                    VystpupChyba = "Parametr funkce má špatný datový typ " + test2[i];
+                                }
                             }
                         }
                         catch (IndexOutOfRangeException)
                         {
-                            VystpuChyba = "Chybi parametr u funkce: " + def.Nazev;
-                            Environment.Exit((int)ExitCode.ParameterMissing);
+                            VystpupChyba = "Chybi parametr u funkce: " + def.Nazev;
+                            //Environment.Exit((int)ExitCode.ParameterMissing);
                         }
                     }
                 }
 
                 _lex.CtiSlovo(vstupDef, def.PromenneDef);
                 PromenneLocal.Clear();
+            }
+            else
+            {
+                VystpupChyba = "Chybi parametr u funkce: " + def.Nazev;
             }
         }
     }
@@ -188,7 +215,7 @@ public class Parser
         if (ZnamFunkci(jmeno))
         {
             Vystup += "Funkce uz existuje: " + jmeno;
-            Environment.Exit((int)ExitCode.DefExist);
+            //Environment.Exit((int)ExitCode.DefExist);
         }
         else
         {
@@ -329,7 +356,7 @@ public class Parser
             j = pozice - 1;
             int test = 0;
 
-            while (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota)-1)
+            while (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota) - 1)
             {
                 while (test < listWhile.Count)
                 {
@@ -436,17 +463,17 @@ public class Parser
         string[] ifSplit2 = ifSplit1[0].Split("if");
         string elseUroven;
 
-        if (ifSplit1[0].Contains("          if"))
+        if (ifSplit1[0].Contains("\t\t\tif"))
         {
-            elseUroven = "          else:";
+            elseUroven = "\t\t\telse:";
         }
-        else if (ifSplit1[0].Contains("      if"))
+        else if (ifSplit1[0].Contains("\t\tif"))
         {
-            elseUroven = "      else:";
+            elseUroven = "\t\telse:";
         }
-        else if (ifSplit1[0].Contains("   if"))
+        else if (ifSplit1[0].Contains("\tif"))
         {
-            elseUroven = "    else:";
+            elseUroven = "\telse:";
         }
         else
         {
@@ -457,10 +484,12 @@ public class Parser
         {
             return VneIf("==", ifSplit2, list, j, radkySplit, listy, elseUroven);
         }
+
         if (ifSplit2[1].Contains(">"))
         {
             return VneIf(">", ifSplit2, list, j, radkySplit, listy, elseUroven);
         }
+
         if (ifSplit2[1].Contains("<"))
         {
             return VneIf("<", ifSplit2, list, j, radkySplit, listy, elseUroven);
@@ -491,8 +520,8 @@ public class Parser
         }
         else
         {
-            VystpuChyba = "Promenna " + slova[0] + " uz existuje ";
-            Environment.Exit((int)ExitCode.VariableExist);
+            VystpupChyba = "Promenna " + slova[0] + " uz existuje ";
+            //Environment.Exit((int)ExitCode.VariableExist);
         }
     }
 
@@ -536,8 +565,8 @@ public class Parser
         }
         else
         {
-            VystpuChyba = "Zadana promnenna neexistuje: " + slova[0];
-            Environment.Exit((int)ExitCode.VariableDoNotExist);
+            VystpupChyba = "Zadana promnenna neexistuje: " + slova[0];
+            //Environment.Exit((int)ExitCode.VariableDoNotExist);
         }
     }
 
@@ -622,8 +651,8 @@ public class Parser
                                         }
                                         catch (IndexOutOfRangeException)
                                         {
-                                            Console.WriteLine("Chybi parametr u funkce: " + def.Nazev);
-                                            Environment.Exit((int)ExitCode.ParameterMissing);
+                                            VystpupChyba = "Chybi parametr u funkce: " + def.Nazev;
+                                            //Environment.Exit((int)ExitCode.ParameterMissing);
                                         }
                                     }
                                 }
@@ -637,8 +666,8 @@ public class Parser
                         }
                         else
                         {
-                            Console.WriteLine("Funkce je void nebo nema return: " + def.Nazev);
-                            Environment.Exit((int)ExitCode.DefType);
+                            VystpupChyba = "Funkce je void nebo nema return: " + def.Nazev;
+                            //Environment.Exit((int)ExitCode.DefType);
                         }
                     }
                 }
@@ -647,7 +676,7 @@ public class Parser
                 {
                     while (Pokracuj == false)
                     {
-                        Task.Delay(20);
+                        Task.Delay(25);
                     }
 
                     slovo = Input;
@@ -692,7 +721,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
+                        VystpupChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -714,7 +743,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
+                        VystpupChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -738,7 +767,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
+                        VystpupChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -781,7 +810,7 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
+                        VystpupChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
@@ -874,13 +903,13 @@ public class Parser
                     }
                     else
                     {
-                        VystpuChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
+                        VystpupChyba = "Spatnej datovej typ u promenne: " + promenna.Nazev;
                         //Environment.Exit((int)ExitCode.InvalidDataType);
                     }
                 }
                 else
                 {
-                    VystpuChyba = "Toto neexistuje: " + slovo;
+                    VystpupChyba = "Toto neexistuje: " + slovo;
                     //Environment.Exit((int)ExitCode.UnknownError);
                 }
             }
@@ -994,7 +1023,7 @@ public class Parser
                 }
                 else
                 {
-                    VystpuChyba = "Toto v mem jazyku neexistuje: " + slovo;
+                    VystpupChyba = "Toto v mem jazyku neexistuje: " + slovo;
                 }
             }
         }
@@ -1133,170 +1162,187 @@ public class Parser
 
         if (znak == "==")
         {
-            if (double.Parse(pr1.Hodnota) == double.Parse(pr2.Hodnota))
+            try
             {
-                return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }
-            else
-            {
-                while (!radkySplit[pozice].Equals("\t"+elseUroven))
+                if (double.Parse(pr1.Hodnota) == double.Parse(pr2.Hodnota))
                 {
-                    pozice++;
+                    return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
                 }
+            }
+            catch (Exception)
+            {
+                VystpupChyba = "Promenna neexsituje: " + rovnoPr1[0];
+            }
 
-                if (radkySplit[pozice].Contains("else"))
+            while (!radkySplit[pozice].Equals(elseUroven))
+            {
+                pozice++;
+            }
+
+            if (radkySplit[pozice].Contains("else"))
+            {
+                listIf.Clear();
+                pozice++;
+                try
                 {
-                    listIf.Clear();
-                    pozice++;
-                    try
+                    while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                     {
-                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
+                        if (!radkySplit[pozice].Contains("if"))
                         {
-                            if (!radkySplit[pozice].Contains("if"))
-                            {
-                                listIf.Add(radkySplit[pozice]);
-                                pozice++;
-                            }
-                            else
+                            listIf.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                        else
+                        {
+                            dejNoveSlovo += radkySplit[pozice] + "\n";
+                            pozice++;
+                            while (radkySplit[pozice].Contains("      ") ||
+                                   radkySplit[pozice].Contains("   else"))
                             {
                                 dejNoveSlovo += radkySplit[pozice] + "\n";
                                 pozice++;
-                                while (radkySplit[pozice].Contains("      ") ||
-                                       radkySplit[pozice].Contains("   else"))
-                                {
-                                    dejNoveSlovo += radkySplit[pozice] + "\n";
-                                    pozice++;
-                                }
-
-                                _lex.CtiSlovo(dejNoveSlovo, listy);
                             }
+
+                            _lex.CtiSlovo(dejNoveSlovo, listy);
                         }
                     }
-                    catch (IndexOutOfRangeException)
-                    {
-                    }
-
-                    while (test < listIf.Count)
-                    {
-                        _lex.CtiSlovo(listIf[test], listy);
-                        test++;
-                    }
-
-                    j = pozice - 1;
-                    return j;
                 }
+                catch (IndexOutOfRangeException)
+                {
+                }
+
+                while (test < listIf.Count)
+                {
+                    _lex.CtiSlovo(listIf[test], listy);
+                    test++;
+                }
+
+                j = pozice - 1;
+                return j;
             }
         }
         else if (znak == ">")
         {
-            if (double.Parse(pr1.Hodnota) > double.Parse(pr2.Hodnota))
+            try
             {
-                return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }
-            else
-            {
-                while (!radkySplit[pozice].Equals(elseUroven))
+                if (double.Parse(pr1.Hodnota) > double.Parse(pr2.Hodnota))
                 {
-                    pozice++;
+                    return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
                 }
+            }
+            catch (Exception)
+            {
+                VystpupChyba = "Promenna neexsituje: " + rovnoPr1[0];
+            }
 
-                if (radkySplit[pozice].Contains("else"))
+
+            while (!radkySplit[pozice].Equals(elseUroven))
+            {
+                pozice++;
+            }
+
+            if (radkySplit[pozice].Contains("else"))
+            {
+                listIf.Clear();
+                pozice++;
+                try
                 {
-                    listIf.Clear();
-                    pozice++;
-                    try
+                    while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                     {
-                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
+                        if (!radkySplit[pozice].Contains("if"))
                         {
-                            if (!radkySplit[pozice].Contains("if"))
-                            {
-                                listIf.Add(radkySplit[pozice]);
-                                pozice++;
-                            }
-                            else
+                            listIf.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                        else
+                        {
+                            dejNoveSlovo += radkySplit[pozice] + "\n";
+                            pozice++;
+                            while (radkySplit[pozice].Contains("      ") ||
+                                   radkySplit[pozice].Contains("   else"))
                             {
                                 dejNoveSlovo += radkySplit[pozice] + "\n";
                                 pozice++;
-                                while (radkySplit[pozice].Contains("      ") ||
-                                       radkySplit[pozice].Contains("   else"))
-                                {
-                                    dejNoveSlovo += radkySplit[pozice] + "\n";
-                                    pozice++;
-                                }
-
-                                _lex.CtiSlovo(dejNoveSlovo, listy);
                             }
+
+                            _lex.CtiSlovo(dejNoveSlovo, listy);
                         }
                     }
-                    catch (IndexOutOfRangeException)
-                    {
-                    }
-
-                    while (test < listIf.Count)
-                    {
-                        _lex.CtiSlovo(listIf[test], listy);
-                        test++;
-                    }
-
-                    j = pozice - 1;
-                    return j;
                 }
+                catch (IndexOutOfRangeException)
+                {
+                }
+
+                while (test < listIf.Count)
+                {
+                    _lex.CtiSlovo(listIf[test], listy);
+                    test++;
+                }
+
+                j = pozice - 1;
+                return j;
             }
         }
         else if (znak == "<")
         {
-            if (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota))
+            try
             {
-                return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
-            }
-            else
-            {
-                while (!radkySplit[pozice].Equals(elseUroven))
+                if (double.Parse(pr1.Hodnota) < double.Parse(pr2.Hodnota))
                 {
-                    pozice++;
+                    return VneVNeIf(radkySplit, pozice, test, dejNoveSlovo, listIf, listy, j, elseUroven);
                 }
+            }
+            catch (Exception)
+            {
+                VystpupChyba = "Promenna neexsituje: " + rovnoPr1[0];
+            }
 
-                if (radkySplit[pozice].Contains("else"))
+
+            while (!radkySplit[pozice].Equals(elseUroven))
+            {
+                pozice++;
+            }
+
+            if (radkySplit[pozice].Contains("else"))
+            {
+                listIf.Clear();
+                pozice++;
+                try
                 {
-                    listIf.Clear();
-                    pozice++;
-                    try
+                    while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
                     {
-                        while (radkySplit[pozice].Contains('\t') && !radkySplit[pozice].Contains("else"))
+                        if (!radkySplit[pozice].Contains("if"))
                         {
-                            if (!radkySplit[pozice].Contains("if"))
-                            {
-                                listIf.Add(radkySplit[pozice]);
-                                pozice++;
-                            }
-                            else
+                            listIf.Add(radkySplit[pozice]);
+                            pozice++;
+                        }
+                        else
+                        {
+                            dejNoveSlovo += radkySplit[pozice] + "\n";
+                            pozice++;
+                            while (radkySplit[pozice].Contains("      ") ||
+                                   radkySplit[pozice].Contains("   else"))
                             {
                                 dejNoveSlovo += radkySplit[pozice] + "\n";
                                 pozice++;
-                                while (radkySplit[pozice].Contains("      ") ||
-                                       radkySplit[pozice].Contains("   else"))
-                                {
-                                    dejNoveSlovo += radkySplit[pozice] + "\n";
-                                    pozice++;
-                                }
-
-                                _lex.CtiSlovo(dejNoveSlovo, listy);
                             }
+
+                            _lex.CtiSlovo(dejNoveSlovo, listy);
                         }
                     }
-                    catch (IndexOutOfRangeException)
-                    {
-                    }
-
-                    while (test < listIf.Count)
-                    {
-                        _lex.CtiSlovo(listIf[test], listy);
-                        test++;
-                    }
-
-                    j = pozice - 1;
-                    return j;
                 }
+                catch (IndexOutOfRangeException)
+                {
+                }
+
+                while (test < listIf.Count)
+                {
+                    _lex.CtiSlovo(listIf[test], listy);
+                    test++;
+                }
+
+                j = pozice - 1;
+                return j;
             }
         }
 
@@ -1329,8 +1375,8 @@ public class Parser
 
                     dejNoveSlovo += radkySplit[pozice] + "\n";
                     pozice++;
-                    while (radkySplit[pozice].Contains("      ") ||
-                           radkySplit[pozice].Contains("   else"))
+                    while ((radkySplit[pozice].Contains("\t") ||
+                            radkySplit[pozice].Contains("\telse")) && !radkySplit[pozice].Equals(elseUroven))
                     {
                         dejNoveSlovo += radkySplit[pozice] + "\n";
                         pozice++;
