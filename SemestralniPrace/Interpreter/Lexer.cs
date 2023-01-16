@@ -50,7 +50,8 @@ public class Lexer
         for (int j = 0; j < radkySplit.Length; j++)
         {
             string[] slova = new string[1];
-            if (radkySplit[j].Contains("(") && radkySplit[j].Contains(")") && !radkySplit[j].Contains("def") && !radkySplit[j].Contains("print") && !radkySplit[j].Contains("input"))
+            if (radkySplit[j].Contains("(") && radkySplit[j].Contains(")") && !radkySplit[j].Contains("def") &&
+                !radkySplit[j].Contains("print") && !radkySplit[j].Contains("input") && !radkySplit[j].Contains("="))
             {
                 slova[0] = radkySplit[j];
             }

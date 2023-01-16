@@ -10,21 +10,29 @@ public class Parser
 {
     private Lexer _lex;
     private List<Promenna> _promenneGlobal;
-    public List<Promenna> PromenneLocal;
+    private List<Promenna> _promenneLocal;
     private List<Funkce> _funkce;
     private Promenna? _pr;
     private PocitaniCisla? _pocc;
     private PocitaniString? _pocs;
     private bool _jsemVIf;
+    private bool _jsemVDef;
     private string _input;
     private bool _pokracuj;
     private string _vysput;
     private string _vystupChyba;
+    private Funkce _globalDef;
 
     public string Input
     {
         get => _input;
         set => _input = value;
+    }
+
+    public List<Promenna> PromenneLocal
+    {
+        get => _promenneLocal;
+        set => _promenneLocal = value;
     }
 
     public bool Pokracuj
@@ -48,7 +56,7 @@ public class Parser
     public Parser(Lexer lex)
     {
         _promenneGlobal = new List<Promenna>();
-        PromenneLocal = new List<Promenna>();
+        _promenneLocal = new List<Promenna>();
         _funkce = new List<Funkce>();
         _lex = lex;
         _funkce.Add(RandomInt());
@@ -191,7 +199,7 @@ public class Parser
                 }
 
                 _lex.CtiSlovo(vstupDef, def.PromenneDef);
-                PromenneLocal.Clear();
+                _promenneLocal.Clear();
             }
             else
             {
@@ -496,7 +504,7 @@ public class Parser
         }
 
         _jsemVIf = false;
-        PromenneLocal.Clear();
+        _promenneLocal.Clear();
 
         return 0;
     }
@@ -504,18 +512,31 @@ public class Parser
     public void VytvoreniPromenne(string slovoHlavni, string[] slova)
     {
         string[] splitSlova = slovoHlavni.Split(':');
+        if (splitSlova[0].Contains('\t'))
+        {
+            string[] slovo = splitSlova[0].Split('\t');
+            splitSlova[0] = slovo[1];
+            slova[0] = slovo[1];
+        }
+
         _pr = new Promenna("", "", splitSlova[0]);
+
 
         if (ZnamPromennou(splitSlova[0]) == false)
         {
             ZjistiCoTamje(slova, _pr, 1);
-            if (_jsemVIf == false)
+
+            if (_jsemVIf == false && _jsemVDef == false)
             {
                 _promenneGlobal.Add(_pr);
             }
+            else if (_jsemVDef)
+            {
+                _globalDef.PromenneDef.Add(_pr);
+            }
             else
             {
-                PromenneLocal.Add(_pr);
+                _promenneLocal.Add(_pr);
             }
         }
         else
@@ -555,7 +576,7 @@ public class Parser
                 }
             }
 
-            foreach (var variable in PromenneLocal)
+            foreach (var variable in _promenneLocal)
             {
                 if (variable.Nazev == slova[0])
                 {
@@ -581,15 +602,24 @@ public class Parser
 
             if (slovo.Contains('(') && slovo.Contains(')')) // jestli to je volani fce
             {
+                if (promenna.DatovejTyp != null && !_promenneGlobal.Contains(promenna) && _jsemVDef == false)
+                {
+                    _promenneGlobal.Add(promenna);
+                }
+
                 string[] test = slovo.Split('(');
                 string[] test1 = test[1].Split(')');
                 string[] test2 = test1[0].Split(',');
 
                 if (ZnamFunkci(test[0]))
                 {
+                    _jsemVDef = true;
                     Funkce? def = DejFunkci(test[0]);
-
+                    _globalDef = def;
+                    //VolaniFce(slovo);
                     bool maReturn = false;
+                    string coVracim = "";
+
                     if (def != null)
                     {
                         foreach (var variable in def.TeloFce)
@@ -597,6 +627,11 @@ public class Parser
                             if (variable.Contains("return"))
                             {
                                 maReturn = true;
+                                string[] returnSplit = variable.Split("return");
+                                coVracim = returnSplit[1];
+                                string str = coVracim;
+                                str = str.Replace(" ", "");
+                                coVracim = str;
                             }
                         }
 
@@ -658,10 +693,19 @@ public class Parser
                                 }
 
                                 _lex.CtiSlovo(vstupDef, def.PromenneDef);
-                                var hodnota = PromenneLocal?[PromenneLocal.Count - 1].Hodnota;
+                                var hodnota = _promenneLocal?[_promenneLocal.Count - 1].Hodnota;
                                 if (hodnota != null)
                                     slovo = hodnota;
-                                PromenneLocal?.Clear();
+                                _promenneLocal?.Clear();
+
+                                foreach (var variable in def.PromenneDef)
+                                {
+                                    if (variable.Nazev.Equals(coVracim))
+                                    {
+                                        Promenna testPr = variable;
+                                        slovo = testPr.Hodnota;
+                                    }
+                                }
                             }
                         }
                         else
@@ -681,6 +725,8 @@ public class Parser
 
                     slovo = Input;
                 }
+
+                _jsemVDef = false;
             }
 
             //jestli to je dotevej typ
@@ -890,9 +936,14 @@ public class Parser
                             promenna.Hodnota = _pocc.ZasobnikCisel.ElementAt(0).ToString(CultureInfo.InvariantCulture);
                         }
                     }
-                    else if (prNova?.DatovejTyp == promenna.DatovejTyp && promenna.DatovejTyp == "double")
+                    else if ((prNova?.DatovejTyp == promenna.DatovejTyp || prNova?.DatovejTyp == "int") &&
+                             promenna.DatovejTyp == "double")
                     {
                         pocitaniVstup += double.Parse(prNova.Hodnota);
+                        if (_jsemVDef)
+                        {
+                            pocitaniVstup += " ";
+                        }
 
                         if (i == slova.Length || i == slova.Length - 1)
                         {
@@ -1041,7 +1092,7 @@ public class Parser
             }
         }
 
-        foreach (var variable in PromenneLocal)
+        foreach (var variable in _promenneLocal)
         {
             if (variable.Nazev == slovo)
             {
@@ -1075,7 +1126,7 @@ public class Parser
             }
         }
 
-        foreach (var variable in PromenneLocal)
+        foreach (var variable in _promenneLocal)
         {
             if (variable.Nazev == slovo)
             {
