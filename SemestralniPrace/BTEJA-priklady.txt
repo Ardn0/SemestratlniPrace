@@ -1,0 +1,83 @@
+x: int = 5
+
+print("Cislo x ma hodnotu ",x)
+
+y: int = 56
+
+print("Cislo y ma hodnotu ",y)
+
+soucet: int = x + y
+
+print("Soucet cisel je ",soucet)
+print("")
+
+while soucet < 70:
+	soucet = soucet + 1
+	print("Upraveny soucet je ",soucet)
+
+print("")
+
+if x == 6:
+	print("Ano promenna x je 6")
+else:
+	print("Ne promenna ma jinou hodnotu a to ",x)
+	x = 5
+	print("Cislo zmeneno na ",x)
+
+
+if x == 5:
+	if y < 60:
+		print("Ano y je mensi nez 60")
+		if y == 56:
+			print("Ano")
+			if soucet > 20:
+				print("Soucet je vice")
+			else:
+				print("Soucet je mene")
+		else:
+			print("Ne")
+	else:
+		print("Ne y je vetsi nez 60")
+else:
+	print("Cislo neni 5")
+
+def mojeFce():
+	x = -50
+
+print("")
+
+print("X pred ",x)
+mojeFce()
+print("X po ",x)
+
+
+def rekurzeFce():
+	while x < 0:
+		x = x + 1
+		print(x)
+		rekuryzeFce()
+
+rekurzeFce()
+
+
+def parametrFce(cislo: int,text: string):
+	print(text,cislo)
+
+
+parametrFce(5,"Cislo je ")
+
+randomInt: int = randint(1,15)
+print(randomInt)
+
+
+def mojeFcePodil(cisloJedna: int,cisloDva: int) -> double:
+	podil: double = cisloJedna / cisloDva
+	return podil
+
+test: double = mojeFcePodil(5,9)
+
+print("Test ",test)
+
+testInput: int = input()
+
+print("Input je ",testInput)
